@@ -2,7 +2,7 @@
 <span id="a">rohan@sh</span>:<span id="b">~</span><span id="c">$</span> cat <!-- kjsdfhkjdhsfkjdshfkj -->rohan.txt<br/><br/>
 My favorite code quote, "<span id="k">Build fast, Code big</span>". <!-- sjkfhskjf -->
 
-Hey There! I am Rohan Sharma.<!-- laglaglaglaglaglaglaglaglaglaglaglag --><p>I am currently pursuing my Bachelor's in Computer Science and Engineering from VIVA Institue of Technology (VIT).</p>
+Hey There! I am Rohan Sharma.<!-- laglaglaglaglaglaglaglaglaglaglaglag --><p>I have completed my Bachelor's in Computer Science and Engineering from VIVA Institue of Technology (VIT).</p>
 <p>I love to code, solve interesting mathematics problems, and play Cricket, and Chess too.</p> <!-- ksjdokhdfgdufdfkjhfkjahdfkjhafkjhakf -->
 <p> I have worked in fields like Front-end Development and Back-end Development until now, and I'm working on other new things. You can learn more about me on my <a href="https://Rohandixit.wixsite.com/about-me"> portfolio</a>.</p><!-- kjdhjhgdgldjhgdwtoiewotwotjdfkjdfffsf -->
 <p>One thing you may notice about me is that I am always coding or solving challenges. I love to develop web-apps and also like solving coding problems. <br><br><br>Do you want to see some of my completed projects? <a href="https://rohan.sh/projects/"> Here you go</a>.</p><!-- hsdgfhjfkdjhfkjsdhfkjdshfkjsdhfkjsdhkfjhdskjfhksdjhfkdsj -->
