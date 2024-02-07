@@ -47,15 +47,14 @@ const info = (
       <span className="highlighted">Node.js</span>.
     </p>
     <p>
-      I've been doing{" "}
-      <span className="highlighted">front-end web designing</span> as a fun
-      pastime for a couple of years now. Currently, I'm learning{" "}
-      <span className="highlighted">React</span> and{" "}
-      <span className="highlighted">Next.js</span>
+      I've been doing <span className="highlighted">full stack devlopment</span>{" "}
+      for a couple of years now. Currently, I'm learning latest techstack such
+      as <span className="highlighted">Next.js</span> and{" "}
+      <span className="highlighted">PostgreSQL</span>
     </p>
     <p>
       Aside from that, I have basic knowledge of{" "}
-      <span className="highlighted">python</span>,{" "}
+      {/* <span className="highlighted">python</span>,{" "} */}
       <span className="highlighted">java</span>,{" "}
       <span className="highlighted">git</span> and{" "}
       <span className="highlighted">shell scripting.</span>
