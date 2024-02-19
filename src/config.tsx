@@ -6,6 +6,8 @@ const email = "hello@rohan.sh";
 
 const projects = [
   "rohansx/doctalyzer",
+  "rohansx/companion-ai",
+  "rohansx/vercel-clone",
   "rohansx/informatician",
   "rohansx/WAVD",
 ];

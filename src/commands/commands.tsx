@@ -118,7 +118,7 @@ const rawCommands: Command[] = [
         <ListElement
           icon="fas fa-fw fa-file"
           name="Resume"
-          link="https://bit.ly/rohansx-resume"
+          link="https://bit.ly/rohansh"
           description="My resume"
         />
       );
