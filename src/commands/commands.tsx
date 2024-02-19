@@ -110,6 +110,22 @@ const rawCommands: Command[] = [
     },
   },
   {
+    name: "resume",
+    icon: "fas fa-fw fa-file",
+    description: "Get a link to my resume",
+    execute() {
+      return (
+        <ListElement
+          icon="fas fa-fw fa-file"
+          name="Resume"
+          link="https://bit.ly/rohansx-resume"
+          description="My resume"
+        />
+      );
+    },
+  },
+
+  {
     name: "clear",
     icon: "fas fa-fw fa-eraser",
     description: "Clear terminal screen",

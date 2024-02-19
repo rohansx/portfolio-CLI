@@ -6,8 +6,8 @@ const email = "hello@rohan.sh";
 
 const projects = [
   "rohansx/doctalyzer",
-  "rohansx/Shellplate",
-  "rohansx/rohan.sh",
+  "rohansx/informatician",
+  "rohansx/WAVD",
 ];
 
 const links = [
@@ -18,17 +18,24 @@ const links = [
     description: "My profile on GitHub",
   },
   {
+    name: "Linkedin",
+    icon: "fab fa-fw fa-linkedin",
+    link: "https://github.com/in/rohansx",
+    description: "My profile on Linkedin",
+  },
+
+  {
     name: "Website",
     icon: "fas fa-fw fa-coffee",
     link: "https://rohan.sh",
     description: "Personal website",
   },
-  {
-    name: "Discord",
-    // link: `https://discord.com/users/${discord_userid}`,
-    icon: "fab fa-fw fa-discord",
-    // description: `${discord_usertag} | Add me as friend!`,
-  },
+  // {
+  //   name: "Discord",
+  //   // link: `https://discord.com/users/${discord_userid}`,
+  //   icon: "fab fa-fw fa-discord",
+  //   // description: `${discord_usertag} | Add me as friend!`,
+  // },
 
   {
     name: "E-mail",
@@ -62,6 +69,12 @@ const info = (
   </>
 );
 
+const resume = {
+  // link: "https://rohan.sh/resume",
+  link: "https://bit.ly/rohansx-resume",
+  description: "My resume",
+};
+
 export {
   github_username,
   //   discord_usertag,
@@ -69,5 +82,6 @@ export {
   email,
   projects,
   links,
+  resume,
   info,
 };
