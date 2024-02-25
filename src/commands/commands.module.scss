@@ -1,111 +1,128 @@
 .infoWrapper {
-	padding: 15px 5px;
+  padding: 15px 5px;
 }
 
 .infoInner {
-	display: flex;
-	align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .avatar {
-	border-radius: 100%;
-	width: 33%;
-	max-width: 200px;
+  border-radius: 100%;
+  width: 33%;
+  max-width: 200px;
 }
 
 .content {
-	flex: 1 1;
-	margin-left: 15px;
+  flex: 1 1;
+  margin-left: 15px;
 }
 
 .info p {
-	margin: 3px 0 0;
+  margin: 3px 0 0;
 }
 
 .header {
-	margin: 4px 0;
-	strong {
-		text-decoration: underline;
-		font-size: var(--font-size-header);
-	}
+  margin: 4px 0;
+  strong {
+    text-decoration: underline;
+    font-size: var(--font-size-header);
+  }
 }
 
 .icons {
-	display: flex;
-	margin-top: 10px;
-	align-items: center;
+  display: flex;
+  margin-top: 10px;
+  align-items: center;
 
-	&:before {
-		content: '';
-		flex: 1 1 auto;
-		height: 1px;
-		background-color: var(--medium);
-		border-radius: 1px;
-		margin: 0 4px;
-	}
+  &:before {
+    content: "";
+    flex: 1 1 auto;
+    height: 1px;
+    background-color: var(--medium);
+    border-radius: 1px;
+    margin: 0 4px;
+  }
 
-	i {
-		font-size: 1.7em;
-		color: var(--medium);
-	}
+  i {
+    font-size: 1.7em;
+    color: var(--medium);
+  }
 }
 
 /* Responsive code */
 @media only screen and (max-width: 700px) {
-	.listElement {
-		margin: 8px 0 8px 10px;
-	}
-	.wrapper {
-		padding: 10px 5px;
-	}
+  .listElement {
+    margin: 8px 0 8px 10px;
+  }
+  .wrapper {
+    padding: 10px 5px;
+  }
 }
 
 @media only screen and (max-width: 530px) {
-	.infoWrapper {
-		padding: 10px 3px;
-	}
+  .infoWrapper {
+    padding: 10px 3px;
+  }
 
-	.infoInner {
-		flex-direction: column;
-	}
+  .infoInner {
+    flex-direction: column;
+  }
 
-	.avatar {
-		width: 175px;
-		height: 175px;
-	}
+  .avatar {
+    width: 175px;
+    height: 175px;
+  }
 
-	.content {
-		margin: 0;
-	}
+  .content {
+    margin: 0;
+  }
 
-	.header {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
+  .header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-		* {
-			margin-top: 2px;
-		}
-	}
+    * {
+      margin-top: 2px;
+    }
+  }
 
-	.bio {
-		display: block;
-		text-align: center;
-		margin-bottom: 4px;
-	}
+  .bio {
+    display: block;
+    text-align: center;
+    margin-bottom: 4px;
+  }
 
-	.info p {
-		margin: 2px 0 0;
-	}
+  .info p {
+    margin: 2px 0 0;
+  }
 
-	.icons {
-		&::after {
-			content: '';
-			flex: 1 1 auto;
-			height: 1px;
-			background-color: var(--medium);
-			border-radius: 1px;
-			margin: 0 4px;
-		}
-	}
+  .icons {
+    &::after {
+      content: "";
+      flex: 1 1 auto;
+      height: 1px;
+      background-color: var(--medium);
+      border-radius: 1px;
+      margin: 0 4px;
+    }
+  }
+}
+
+.catImageContainer {
+  display: flex; // Enables Flexbox
+  justify-content: center; // Centers horizontally
+  align-items: center; // Centers vertically
+  height: 400px; // Set a height for the container
+
+  // You might want to add additional styling here, such as a fixed width or margins
+}
+
+.catImage {
+  border-radius: 10%; // Removes the border-radius to create a rectangular shape
+  width: 600px; // Adjust the width as needed
+  height: 350px; // Adjust the height as needed
+  object-fit: cover;
+  justify-content: center; // Ensures the image covers the area without stretching
 }

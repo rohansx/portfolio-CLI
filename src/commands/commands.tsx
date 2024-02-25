@@ -3,10 +3,39 @@ import styles from "./commands.module.scss";
 import { links, info } from "../config";
 import { Commands, Command } from "../typings";
 import ListElement from "../ListElement/ListElement";
+import axios from "axios";
+
+import { useState, useEffect } from "react";
+
+const CatCommand = () => {
+  const [catImageUrl, setCatImageUrl] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    axios
+      .get("https://api.thecatapi.com/v1/images/search")
+      .then((response) => {
+        setCatImageUrl(response.data[0].url);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching cat image:", error);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  return (
+    <div className={styles.catImageContainer}>
+      <img src={catImageUrl} alt="Random Cat" className={styles.catImage} />
+      {/* You can also include the description here if you have one */}
+    </div>
+  );
+};
 
 const rawCommands: Command[] = [
   {
-    name: "help",
+    name: "ls",
     icon: "fas fa-fw fa-question-circle",
     description: "List down all available commands",
     execute(app) {
@@ -54,7 +83,44 @@ const rawCommands: Command[] = [
 
           <div className={styles.icons}>
             <i className="fab fa-fw fa-react"></i>
-            <i className="fab fa-fw fa-tailwind"></i>
+            {/* <i className="fab fa-fw fa-tailwind"></i> */}
+            <i className="fab fa-fw fa-js-square"></i>
+            <i className="fab fa-fw fa-node-js"></i>
+            <i className="fab fa-fw fa-python"></i>
+            <i className="fab fa-fw fa-java"></i>
+          </div>
+        </div>
+      );
+    },
+  },
+  {
+    name: "whoami",
+    icon: "fas fa-fw fa-info-circle",
+    description: "Show information about me",
+    execute(app) {
+      const { userDataLoaded, userData } = app.state;
+      if (!userDataLoaded) return <>sh: user data could not be fetched</>;
+      const { avatar_url, login, name, bio } = userData;
+      return (
+        <div className={styles.infoWrapper}>
+          <div className={styles.infoInner}>
+            <img
+              src={avatar_url}
+              className={styles.avatar}
+              alt="GitHub avatar"
+            />
+            <div className={styles.content}>
+              <div className={styles.header}>
+                <strong>{name}</strong> <span className="muted">@{login}</span>
+              </div>
+              <em className={styles.bio}>"...{bio}"</em>
+              <div className={styles.info}>{info}</div>
+            </div>
+          </div>
+
+          <div className={styles.icons}>
+            <i className="fab fa-fw fa-react"></i>
+            {/* <i className="fab fa-fw fa-tailwind"></i> */}
             <i className="fab fa-fw fa-js-square"></i>
             <i className="fab fa-fw fa-node-js"></i>
             <i className="fab fa-fw fa-python"></i>
@@ -119,12 +185,19 @@ const rawCommands: Command[] = [
           icon="fas fa-fw fa-file"
           name="Resume"
           link="https://bit.ly/rohansh"
-          description="My resume"
+          description="Click to see my resume!"
         />
       );
     },
   },
-
+  {
+    name: "cat",
+    icon: "fas fa-fw fa-cat",
+    description: "Click to see something interesting!",
+    execute(app) {
+      return <CatCommand />;
+    },
+  },
   {
     name: "clear",
     icon: "fas fa-fw fa-eraser",

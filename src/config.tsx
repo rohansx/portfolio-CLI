@@ -10,6 +10,9 @@ const projects = [
   "rohansx/vercel-clone",
   "rohansx/informatician",
   "rohansx/WAVD",
+  "rohansx/xmail",
+  "rohansx/paradox",
+  "rohansx/npx-rohan",
 ];
 
 const links = [
