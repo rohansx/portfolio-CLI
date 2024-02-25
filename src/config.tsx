@@ -35,6 +35,12 @@ const links = [
     link: "https://rohan.sh",
     description: "Personal website",
   },
+  {
+    name: "Twitter",
+    icon: "fab fa-fw fa-twitter",
+    link: "https://twitter.com/rohaxyz",
+    description: "My profile on Twitter",
+  },
   // {
   //   name: "Discord",
   //   // link: `https://discord.com/users/${discord_userid}`,
