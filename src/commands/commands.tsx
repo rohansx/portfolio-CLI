@@ -7,6 +7,39 @@ import axios from "axios";
 
 import { useState, useEffect } from "react";
 
+const HistoryCommand = () => {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const today = new Date();
+    const month = today.getMonth() + 1; // In JavaScript, months are 0-indexed
+    const day = today.getDate();
+
+    axios
+      .get(`https://history.muffinlabs.com/date/${month}/${day}`)
+      .then((response) => {
+        setEvents(response.data.data.Events);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching historical events:", error);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  return (
+    <ul>
+      {events.map((event: { year: string; text: string }, index: number) => (
+        <li key={index}>
+          <strong>{event.year}</strong>: {event.text}
+        </li>
+      ))}
+    </ul>
+  );
+};
+
 const CatCommand = () => {
   const [catImageUrl, setCatImageUrl] = useState("");
   const [loading, setLoading] = useState(true);
@@ -223,9 +256,19 @@ const rawCommands: Command[] = [
   },
 
   {
+    name: "history",
+    icon: "fas fa-fw fa-history",
+    description:
+      "It shows significant historical events that happened on this day!",
+    execute(app) {
+      return <HistoryCommand />;
+    },
+  },
+
+  {
     name: "meme",
     icon: "fas fa-fw fa-laugh", // Use an appropriate icon
-    description: "Don't click or you might get offended!",
+    description: "Don't type or you might get offended!",
     execute(app) {
       return <MemeCommand />;
     },
