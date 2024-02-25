@@ -33,6 +33,37 @@ const CatCommand = () => {
   );
 };
 
+const MemeCommand = () => {
+  const [memeUrl, setMemeUrl] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    axios
+      .get("https://www.reddit.com/r/dankmemes/top/.json?limit=50")
+      .then((response) => {
+        const posts = response.data.data.children;
+        const filteredPosts = posts.filter(
+          (post: any) => post.data.post_hint === "image"
+        );
+        const randomPost =
+          filteredPosts[Math.floor(Math.random() * filteredPosts.length)];
+        setMemeUrl(randomPost.data.url);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching meme:", error);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  return (
+    <div className={styles.memeImageContainer}>
+      <img src={memeUrl} alt="Random Meme" className={styles.memeImage} />
+    </div>
+  );
+};
+
 const rawCommands: Command[] = [
   {
     name: "ls",
@@ -190,6 +221,16 @@ const rawCommands: Command[] = [
       );
     },
   },
+
+  {
+    name: "meme",
+    icon: "fas fa-fw fa-laugh", // Use an appropriate icon
+    description: "Don't click or you might get offended!",
+    execute(app) {
+      return <MemeCommand />;
+    },
+  },
+
   {
     name: "cat",
     icon: "fas fa-fw fa-cat",

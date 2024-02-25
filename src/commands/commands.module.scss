@@ -126,3 +126,16 @@
   object-fit: cover;
   justify-content: center; // Ensures the image covers the area without stretching
 }
+
+.memeImageContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  // Adjust the container size as needed
+}
+
+.memeImage {
+  max-width: 100%; // Ensures the image fits within the container
+  height: auto;
+  border-radius: 10px; // Optional: for slightly rounded corners
+}
