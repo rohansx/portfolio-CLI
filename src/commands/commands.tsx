@@ -6,7 +6,11 @@ import ListElement from "../ListElement/ListElement";
 import axios from "axios";
 
 import { useState, useEffect } from "react";
-
+interface ApodData {
+  title: string;
+  url: string;
+  explanation: string;
+}
 const HistoryCommand = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -37,6 +41,44 @@ const HistoryCommand = () => {
         </li>
       ))}
     </ul>
+  );
+};
+
+const SpaceCommand = () => {
+  const [apodData, setApodData] = useState<ApodData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false); // Added error state
+
+  useEffect(() => {
+    const apiKey = process.env.REACT_APP_NASA_API_KEY;
+    if (!apiKey) {
+      console.error("NASA API key is not defined");
+      setLoading(false);
+      setError(true); // Set error state
+      return;
+    }
+
+    axios
+      .get(`https://api.nasa.gov/planetary/apod?api_key=${apiKey}`)
+      .then((response) => {
+        setApodData(response.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching APOD data:", error);
+        setLoading(false);
+        setError(true); // Set error state
+      });
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error || !apodData) return <div>Error loading APOD data</div>; // Check for error state
+  return (
+    <div>
+      <h3>{apodData.title}</h3>
+      <img src={apodData.url} alt={apodData.title} />
+      <p>{apodData.explanation}</p>
+    </div>
   );
 };
 
@@ -256,6 +298,16 @@ const rawCommands: Command[] = [
   },
 
   {
+    name: "space",
+    icon: "fas fa-fw fa-space-shuttle",
+    description:
+      "Display an astronomy picture of the day and facts about space from NASA",
+    execute(app) {
+      return <SpaceCommand />;
+    },
+  },
+
+  {
     name: "history",
     icon: "fas fa-fw fa-history",
     description:
@@ -282,6 +334,7 @@ const rawCommands: Command[] = [
       return <CatCommand />;
     },
   },
+
   {
     name: "clear",
     icon: "fas fa-fw fa-eraser",
