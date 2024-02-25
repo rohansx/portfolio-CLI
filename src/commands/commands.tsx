@@ -74,7 +74,7 @@ const SpaceCommand = () => {
   if (loading) return <div>Loading...</div>;
   if (error || !apodData) return <div>Error loading APOD data</div>; // Check for error state
   return (
-    <div>
+    <div className="space">
       <h3>{apodData.title}</h3>
       <img src={apodData.url} alt={apodData.title} />
       <p>{apodData.explanation}</p>
@@ -143,25 +143,28 @@ const rawCommands: Command[] = [
   {
     name: "ls",
     icon: "fas fa-fw fa-question-circle",
-    description: "List down all available commands",
+    description: "List down all available commands except 'ls' and 'info'",
     execute(app) {
       const { commands } = app.state;
       return (
         <>
           Available commands:
-          {[...commands.values()].map(({ icon, name, description }, key) => (
-            <ListElement
-              key={key}
-              icon={icon}
-              name={name}
-              description={description}
-              help
-            />
-          ))}
+          {[...commands.values()]
+            .filter((cmd) => cmd.name !== "ls" && cmd.name !== "info")
+            .map(({ icon, name, description }, key) => (
+              <ListElement
+                key={key}
+                icon={icon}
+                name={name}
+                description={description}
+                help
+              />
+            ))}
         </>
       );
     },
   },
+
   {
     name: "info",
     icon: "fas fa-fw fa-info-circle",

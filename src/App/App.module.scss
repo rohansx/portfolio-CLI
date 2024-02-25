@@ -32,9 +32,13 @@
   //   box-shadow: 10px 10px 5px 0px var(--darkest);
   //   -webkit-box-shadow: 10px 10px 5px 0px var(--darkest);
   //   -moz-box-shadow: 10px 10px 5px 0px var(--darkest);
-  box-shadow: 10px 10px 243px -24px rgba(28, 12, 217, 0.71);
-  -webkit-box-shadow: 10px 10px 243px -24px rgba(28, 12, 217, 0.71);
-  -moz-box-shadow: 10px 10px 243px -24px rgba(28, 12, 217, 0.71);
+
+  box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
+  -webkit-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 10px -1px 228px 1px rgba(10, 198, 204, 0.59);
+  -webkit-box-shadow: 10px -1px 228px 1px rgba(9, 216, 178, 0.59);
+  -moz-box-shadow: 10px -1px 228px 1px rgba(23, 207, 174, 0.59);
 }
 
 @keyframes pop-fade {
