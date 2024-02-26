@@ -81,6 +81,29 @@ const SpaceCommand = () => {
     </div>
   );
 };
+const FutureCommand = () => {
+  const [futureImageUrl, setFutureImageUrl] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Replace with your image URL or API endpoint
+    const imageUrl =
+      "https://res.cloudinary.com/da6jt8q7s/image/upload/v1708936852/future_lkv1fd.jpg";
+    setFutureImageUrl(imageUrl);
+    setLoading(false);
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  return (
+    <div className={styles.imageContainer}>
+      <img
+        src={futureImageUrl}
+        alt="Glimpse of the Future"
+        className={styles.catImage + " " + styles.catImageContainerImage}
+      />
+    </div>
+  );
+};
 
 const CatCommand = () => {
   const [catImageUrl, setCatImageUrl] = useState("");
@@ -335,6 +358,15 @@ const rawCommands: Command[] = [
     description: "Click to see something interesting!",
     execute(app) {
       return <CatCommand />;
+    },
+  },
+
+  {
+    name: "future",
+    icon: "fas fa-fw fa-image", // Use an appropriate icon
+    description: "See a glimpse of the future!",
+    execute(app) {
+      return <FutureCommand />;
     },
   },
 
