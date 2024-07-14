@@ -4,6 +4,7 @@ import commands from "../commands/commands";
 import { projects, github_username } from "../config";
 import { AppState } from "../typings";
 import InputManager from "../InputManager/InputManager";
+import { trackPageView } from "../analytics"; // Import the tracking function
 
 class App extends Component<{}, AppState> {
   mainRef: RefObject<any>;
@@ -59,6 +60,9 @@ class App extends Component<{}, AppState> {
       userDataLoaded: true,
       userData: userData,
     });
+
+    // Track initial page view
+    trackPageView(window.location.pathname + window.location.search);
   }
 
   componentDidUpdate(_: any, prevState: AppState) {
@@ -72,6 +76,9 @@ class App extends Component<{}, AppState> {
         left: 0,
         behavior: "smooth",
       });
+
+    // Track page view on update
+    trackPageView(window.location.pathname + window.location.search);
   }
 
   render() {
