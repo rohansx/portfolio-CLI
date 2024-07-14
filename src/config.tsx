@@ -82,7 +82,7 @@ const info = (
 
 const resume = {
   // link: "https://rohan.sh/resume",
-  link: "https://bit.ly/rohansxcv",
+  link: "https://dub.sh/rohan-cv",
   description: "My resume",
 };
 

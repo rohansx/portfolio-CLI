@@ -5986,7 +5986,7 @@ prompts@^2.0.1, prompts@^2.4.2:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@^15.8.1:
+prop-types@^15.6.0, prop-types@^15.8.1:
   version "15.8.1"
   dependencies:
     loose-envify "^1.4.0"
@@ -6096,6 +6096,11 @@ react-dom@^17.0.2, react-dom@<18.0.0:
 react-error-overlay@^6.0.11:
   version "6.0.11"
 
+react-ga@^3.3.1:
+  version "3.3.1"
+  resolved "https://registry.npmjs.org/react-ga/-/react-ga-3.3.1.tgz"
+  integrity sha512-4Vc0W5EvXAXUN/wWyxvsAKDLLgtJ3oLmhYYssx+YzphJpejtOst6cbIHCIyF50Fdxuf5DDKqRYny24yJ2y7GFQ==
+
 react-is@^16.13.1:
   version "16.13.1"
 
@@ -6161,7 +6166,7 @@ react-scripts@5.0.0:
   optionalDependencies:
     fsevents "^2.3.2"
 
-react@^17.0.2, react@<18.0.0, "react@>= 16", react@17.0.2:
+"react@^15.6.2 || ^16.0 || ^17 || ^18", react@^17.0.2, react@<18.0.0, "react@>= 16", react@17.0.2:
   version "17.0.2"
   dependencies:
     loose-envify "^1.1.0"
