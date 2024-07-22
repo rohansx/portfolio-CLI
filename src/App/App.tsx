@@ -1,3 +1,5 @@
+// src/App.tsx
+
 import React, { Component, createRef, RefObject } from "react";
 import styles from "./App.module.scss";
 import commands from "../commands/commands";
@@ -5,6 +7,7 @@ import { projects, github_username } from "../config";
 import { AppState } from "../typings";
 import InputManager from "../InputManager/InputManager";
 import { trackPageView } from "../analytics"; // Import the tracking function
+import SEO from "../components/SEO";
 
 class App extends Component<{}, AppState> {
   mainRef: RefObject<any>;
@@ -85,6 +88,12 @@ class App extends Component<{}, AppState> {
     const { record } = this.state;
     return (
       <div className={styles.wrapper}>
+        <SEO
+          title="Rohan Sharma - Full Stack Developer"
+          description="Rohan Sharma's portfolio. A full stack developer specializing in JavaScript and Node.js."
+          image="https://avatars.githubusercontent.com/u/33249782?s=400&u=525a383fc9930aa547c76dfc0579ed44be306c86&v=4"
+          url="https://rohan.sh"
+        />
         <div className={styles.window}>
           <div className={styles.titleBar}>
             <div className={styles.dotHolder}>

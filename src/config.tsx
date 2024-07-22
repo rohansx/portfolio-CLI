@@ -11,7 +11,7 @@ const projects = [
   // "rohansx/vercel-clone",
   "rohansx/informatician",
   "rohansx/WAVD",
-  // "rohansx/xmail",s
+  // "rohansx/xmail",
   "rohansx/paradox",
   "rohansx/npx-rohan",
 ];
