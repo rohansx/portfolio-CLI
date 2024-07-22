@@ -95,11 +95,11 @@ const FutureCommand = () => {
 
   if (loading) return <div>Loading...</div>;
   return (
-    <div className={styles.imageContainer}>
+    <div className={styles.catImageContainer}>
       <img
         src={futureImageUrl}
         alt="Glimpse of the Future"
-        className={styles.catImage + " " + styles.catImageContainerImage}
+        className={styles.catImage}
       />
     </div>
   );

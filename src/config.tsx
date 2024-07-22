@@ -1,16 +1,17 @@
 import React from "react";
+// import Peerlist from "../public/Peerlist.svg";
 const github_username = "rohansx";
 // const discord_usertag = ''
 // const discord_userid = ''
 const email = "hello@rohan.sh";
 
 const projects = [
-  "rohansx/doctalyzer",
-  "rohansx/companion-ai",
-  "rohansx/vercel-clone",
+  // "rohansx/doctalyzer",
+  // "rohansx/companion-ai",
+  // "rohansx/vercel-clone",
   "rohansx/informatician",
   "rohansx/WAVD",
-  "rohansx/xmail",
+  // "rohansx/xmail",s
   "rohansx/paradox",
   "rohansx/npx-rohan",
 ];
@@ -28,7 +29,6 @@ const links = [
     link: "https://github.com/in/rohansx",
     description: "My profile on Linkedin",
   },
-
   {
     name: "Website",
     icon: "fas fa-fw fa-coffee",
@@ -41,16 +41,15 @@ const links = [
     link: "https://twitter.com/rohaxyz",
     description: "My profile on Twitter",
   },
-  // {
-  //   name: "Discord",
-  //   // link: `https://discord.com/users/${discord_userid}`,
-  //   icon: "fab fa-fw fa-discord",
-  //   // description: `${discord_usertag} | Add me as friend!`,
-  // },
-
+  {
+    name: "Peerlist",
+    icon: "fab fa-fw fa-user",
+    link: "https://peerlist.io/rohansx",
+    description: "My profile on Peerlist",
+  },
   {
     name: "E-mail",
-    icon: "fas fa-fw fa-at",
+    icon: "fas fa-fw fa-envelope",
     link: `mailto:${email}`,
     description: "Lets get in touch!",
   },
@@ -65,9 +64,10 @@ const info = (
       <span className="highlighted">Node.js</span>.
     </p>
     <p>
-      I've been doing <span className="highlighted">full stack devlopment</span>{" "}
-      for a couple of years now. Currently, I'm learning latest techstack such
-      as <span className="highlighted">Next.js</span> and{" "}
+      I've been doing{" "}
+      <span className="highlighted">full stack development</span> for a couple
+      of years now. Currently, I'm learning latest techstack such as{" "}
+      <span className="highlighted">Next.js</span> and{" "}
       <span className="highlighted">PostgreSQL</span>
     </p>
     <p>
