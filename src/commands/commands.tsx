@@ -1,9 +1,16 @@
 import React from "react";
 import styles from "./commands.module.scss";
 import { links, info } from "../config";
-import { Commands, Command } from "../typings";
+import { Commands, Command, BlogPost } from "../typings";
 import ListElement from "../ListElement/ListElement";
 import axios from "axios";
+import { BlogList, BlogPostView } from "../components/Blog";
+import blogPostsModule from "../blogs";
+import {
+  getBlogPostBySlug,
+  getViewCount,
+  incrementViewCount,
+} from "../utils/blogUtils";
 
 import { useState, useEffect } from "react";
 interface ApodData {
@@ -379,9 +386,165 @@ const rawCommands: Command[] = [
         ...app.state,
         record: [],
       });
+      return null;
+    },
+  },
+
+  {
+    name: "blogpost",
+    icon: "fas fa-fw fa-file-alt",
+    description: "Open a specific blog post by ID",
+    execute(app) {
+      const args =
+        app.state.record[app.state.record.length - 1].command.split(" ");
+      const postId = args[1];
+
+      if (!postId) {
+        return <AsyncBlogList />;
+      }
+
+      const AsyncBlogPostById = () => {
+        const [post, setPost] = React.useState<any>(null);
+        const [loading, setLoading] = React.useState(true);
+        const [error, setError] = React.useState("");
+
+        React.useEffect(() => {
+          const loadPost = async () => {
+            try {
+              const posts = await blogPostsModule.getBlogPosts();
+              const foundPost = posts.find((p) => p.id === postId);
+
+              if (foundPost) {
+                setPost(foundPost);
+                // Update URL
+                window.history.pushState(
+                  { id: foundPost.id },
+                  "",
+                  `/blogs/${foundPost.id}/${foundPost.slug}`
+                );
+                // Increment view count
+                incrementViewCount(foundPost.id);
+              } else {
+                setError(`Blog post with ID ${postId} not found.`);
+              }
+            } catch (err) {
+              console.error("Error loading blog post:", err);
+              setError("Error loading blog post.");
+            } finally {
+              setLoading(false);
+            }
+          };
+
+          loadPost();
+        }, []);
+
+        if (loading) {
+          return <div>Loading blog post...</div>;
+        }
+
+        if (error) {
+          return <div>{error}</div>;
+        }
+
+        return post ? <BlogPostView post={post} /> : null;
+      };
+
+      return <AsyncBlogPostById />;
+    },
+  },
+
+  {
+    name: "blog",
+    icon: "fas fa-fw fa-newspaper",
+    description: "View blog posts",
+    execute(app) {
+      // Check if there's a slug in the URL
+      const match = window.location.pathname.match(
+        /\/blogs\/(\d+)\/([a-z0-9-]+)/
+      );
+
+      if (match && match[2]) {
+        const slug = match[2];
+        return <AsyncBlogPost slug={slug} />;
+      }
+
+      return <AsyncBlogList />;
     },
   },
 ];
 const commands: Commands = new Map(rawCommands.map((cmd) => [cmd.name, cmd]));
+
+// Create an async blog list component
+const AsyncBlogList = () => {
+  const [posts, setPosts] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState("");
+
+  React.useEffect(() => {
+    const loadPosts = async () => {
+      try {
+        const blogPosts = await blogPostsModule.getBlogPosts();
+        setPosts(blogPosts);
+      } catch (err) {
+        console.error("Error loading blog posts:", err);
+        setError("Error loading blog posts.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadPosts();
+  }, []);
+
+  if (loading) {
+    return <div>Loading blog posts...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  return <BlogList posts={posts} />;
+};
+
+// Create an async blog post component
+const AsyncBlogPost = ({ slug }: { slug: string }) => {
+  const [post, setPost] = React.useState<any>(null);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState("");
+
+  React.useEffect(() => {
+    const loadPost = async () => {
+      try {
+        const foundPost = await getBlogPostBySlug(slug);
+
+        if (foundPost) {
+          setPost(foundPost);
+          // Increment view count
+          incrementViewCount(foundPost.id);
+        } else {
+          setError(`Blog post with slug "${slug}" not found.`);
+        }
+      } catch (err) {
+        console.error("Error loading blog post:", err);
+        setError("Error loading blog post.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadPost();
+  }, [slug]);
+
+  if (loading) {
+    return <div>Loading blog post...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  return post ? <BlogPostView post={post} /> : null;
+};
 
 export default commands;

@@ -144,3 +144,261 @@
   width: 300px;
   height: 200px;
 }
+
+// Blog styles
+.blogListWrapper {
+  margin: 1rem 0;
+
+  h2 {
+    margin-bottom: 1rem;
+    color: #61dafb;
+  }
+}
+
+.blogList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.blogListItem {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #444;
+
+  h3 {
+    margin: 0 0 0.5rem 0;
+    color: #fff;
+  }
+
+  p {
+    margin: 0.5rem 0;
+  }
+}
+
+.blogMeta {
+  font-size: 0.8rem;
+  color: #888;
+  margin-bottom: 0.5rem;
+}
+
+.blogLink {
+  margin-top: 0.5rem;
+
+  a {
+    color: #61dafb;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.blogPostWrapper {
+  margin: 1rem 0;
+}
+
+.blogHeader {
+  margin-bottom: 2rem;
+
+  h1 {
+    margin: 0 0 0.5rem 0;
+    color: #61dafb;
+  }
+}
+
+.blogContent {
+  line-height: 1.6;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: #fff;
+    margin: 1.5rem 0 1rem 0;
+  }
+
+  p {
+    margin: 1rem 0;
+  }
+
+  code {
+    background-color: #333;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-family: monospace;
+  }
+
+  pre {
+    background-color: #282c34;
+    padding: 1rem;
+    border-radius: 5px;
+    overflow-x: auto;
+
+    code {
+      background-color: transparent;
+      padding: 0;
+    }
+  }
+
+  ul,
+  ol {
+    margin: 1rem 0;
+    padding-left: 2rem;
+  }
+}
+
+.blogBackLink {
+  margin-top: 2rem;
+
+  a {
+    color: #61dafb;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// Markdown content styles
+.markdownContent {
+  line-height: 1.6;
+
+  h1 {
+    font-size: 1.8rem;
+    margin: 1.5rem 0 1rem 0;
+    color: #e0e0e0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 0.3rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    margin: 1.5rem 0 1rem 0;
+    color: #e0e0e0;
+    padding-bottom: 0.2rem;
+  }
+
+  h3 {
+    font-size: 1.3rem;
+    margin: 1.5rem 0 1rem 0;
+    color: #e0e0e0;
+  }
+
+  p {
+    margin: 1rem 0;
+    color: #e0e0e0;
+  }
+
+  ul,
+  ol {
+    margin: 1rem 0;
+    padding-left: 2rem;
+    color: #e0e0e0;
+  }
+
+  li {
+    margin: 0.5rem 0;
+    color: #e0e0e0;
+  }
+
+  code {
+    background-color: #222;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.9em;
+    color: #e0e0e0;
+  }
+
+  pre.code-block {
+    background-color: #161616;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 5px;
+    overflow-x: auto;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+
+    code {
+      background-color: transparent;
+      padding: 0;
+      color: #e0e0e0;
+      font-family: "JetBrains Mono", monospace;
+      display: block;
+      line-height: 1.5;
+    }
+  }
+
+  a {
+    color: #3291ff;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  blockquote {
+    border-left: 4px solid #3291ff;
+    margin: 1rem 0;
+    color: #bbbbbb;
+    background-color: #161616;
+    padding: 0.5rem 1rem;
+    border-radius: 0 4px 4px 0;
+  }
+
+  img {
+    max-width: 100%;
+    margin: 1rem 0;
+    border-radius: 5px;
+  }
+}
+
+// Enhanced code block styling
+.codeBlock {
+  position: relative;
+
+  .code-header {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 4px 10px;
+    font-size: 12px;
+    color: #999;
+    background-color: rgba(30, 30, 30, 0.7);
+    border-radius: 0 6px 0 6px;
+  }
+
+  .language-badge {
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+}
+
+// Enhanced link styling
+.mdLink {
+  display: inline-block;
+  position: relative;
+  color: #3291ff !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+  border-bottom: 1px solid rgba(50, 145, 255, 0.3) !important;
+  padding-bottom: 1px !important;
+
+  &:hover {
+    border-bottom-color: #3291ff !important;
+    background-color: rgba(50, 145, 255, 0.05) !important;
+  }
+
+  .external-link-icon {
+    display: inline-block;
+    font-size: 14px;
+    margin-left: 4px;
+    opacity: 0.7;
+  }
+}

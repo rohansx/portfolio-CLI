@@ -1,0 +1,10 @@
+{
+  "build": {
+    "env": {
+      "NODE_OPTIONS": "--max_old_space_size=4096"
+    }
+  },
+  "installCommand": "npm install --no-package-lock --legacy-peer-deps",
+  "buildCommand": "npm run build:vercel",
+  "framework": "create-react-app"
+}
