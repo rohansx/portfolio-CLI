@@ -539,6 +539,30 @@ $dots: (
       font-style: italic;
     }
   }
+
+  /* Tweet component styling in different contexts */
+  ul,
+  ol {
+    + li a[href*="twitter.com/"],
+    + li a[href*="x.com/"] {
+      display: inline-block;
+      margin-top: 0.5rem;
+      word-break: break-word;
+    }
+  }
+
+  a[href*="twitter.com/"],
+  a[href*="x.com/"] {
+    color: #1da1f2;
+    word-break: break-word;
+  }
+}
+
+/* Visual indicator for Twitter links in bullet points */
+li a[href*="twitter.com/"]::before,
+li a[href*="x.com/"]::before {
+  content: "🔗 ";
+  margin-right: 4px;
 }
 
 .blogFooter {
@@ -784,5 +808,71 @@ $dots: (
     max-width: 100%;
     height: auto;
     border-radius: 4px;
+  }
+}
+
+/* Twitter link styling */
+.twitter-link {
+  position: relative;
+  display: inline-block;
+  color: #1da1f2 !important;
+  word-break: break-word;
+
+  &::before {
+    content: "🐦";
+    margin-right: 4px;
+  }
+}
+
+/* Horizontal tweet testimonials */
+.tweetTestimonials {
+  display: flex;
+  overflow-x: auto;
+  padding: 1rem 0;
+  gap: 1.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
+
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(155, 155, 155, 0.5);
+    border-radius: 20px;
+  }
+
+  .tweetContainer {
+    min-width: 300px;
+    max-width: 350px;
+    margin: 0;
+    flex-shrink: 0;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+  }
+}
+
+.tweetSkeleton {
+  background-color: rgba(25, 25, 25, 0.05);
+  border-radius: 12px;
+  padding: 1rem;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &::before {
+    content: "Loading tweet...";
+    color: #888;
+    font-style: italic;
   }
 }
