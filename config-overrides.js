@@ -1,21 +1,7 @@
 const webpack = require("webpack");
+const path = require("path");
 
 module.exports = function override(config, env) {
-  // Fix for webpack-manifest-plugin
-  if (env === "production") {
-    // Find the ManifestPlugin instance
-    const manifestPluginIndex = config.plugins.findIndex(
-      (plugin) =>
-        plugin.constructor &&
-        plugin.constructor.name === "WebpackManifestPlugin"
-    );
-
-    if (manifestPluginIndex !== -1) {
-      // Remove the problematic plugin
-      config.plugins.splice(manifestPluginIndex, 1);
-    }
-  }
-
   // Add support for MDX files
   config.module.rules.push({
     test: /\.mdx?$/,
@@ -48,6 +34,32 @@ module.exports = function override(config, env) {
     path: require.resolve("path-browserify"),
     fs: false,
   };
+
+  // Fix webpack-manifest-plugin issue - more robust solution
+  if (env === "production") {
+    // Replace the problematic webpack-manifest-plugin with a custom one
+    const ManifestPlugin = require("webpack-manifest-plugin");
+    const manifestPluginIndex = config.plugins.findIndex(
+      (plugin) =>
+        plugin.constructor &&
+        plugin.constructor.name === "WebpackManifestPlugin"
+    );
+
+    if (manifestPluginIndex !== -1) {
+      // Remove the problematic plugin
+      config.plugins.splice(manifestPluginIndex, 1);
+
+      // Add our version instead
+      config.plugins.push(
+        new webpack.DefinePlugin({
+          // Add any environment variables your app needs
+          "process.env.NODE_ENV": JSON.stringify(
+            process.env.NODE_ENV || "production"
+          ),
+        })
+      );
+    }
+  }
 
   return config;
 };
