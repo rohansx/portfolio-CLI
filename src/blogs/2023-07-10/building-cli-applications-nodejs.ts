@@ -100,7 +100,6 @@ Building CLI tools with Node.js allows you to create powerful utilities that can
 You can also check out this perspective on modern CLI design:
 
 
-https://x.com/michelifelse/status/1902304846629499185?t=9vcUzlc9qLDvsouDNh8BCA&s=19
 
   `,
   author: "Rohan Sharma",
