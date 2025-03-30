@@ -4,12 +4,20 @@ import React, { Component, createRef, RefObject } from "react";
 import styles from "./App.module.scss";
 import commands from "../commands/commands";
 import { projects, github_username } from "../config";
-import { AppState } from "../typings";
+import { AppState, BlogPost } from "../typings";
 import InputManager from "../InputManager/InputManager";
 import { trackPageView } from "../analytics"; // Import the tracking function
 import SEO from "../components/SEO";
+import blogPostsModule from "../blogs";
+import BlogPage from "../components/BlogPage";
 
-class App extends Component<{}, AppState> {
+interface AppComponentState extends AppState {
+  showBlogPage: boolean;
+  blogPosts: BlogPost[];
+  blogPostsLoaded: boolean;
+}
+
+class App extends Component<{}, AppComponentState> {
   mainRef: RefObject<any>;
   handleExecute: (arg: string) => void;
 
@@ -20,6 +28,9 @@ class App extends Component<{}, AppState> {
       commands: commands,
       projectDataLoaded: false,
       userDataLoaded: false,
+      showBlogPage: false,
+      blogPosts: [],
+      blogPostsLoaded: false,
     };
 
     this.mainRef = createRef();
@@ -47,6 +58,21 @@ class App extends Component<{}, AppState> {
   }
 
   async componentDidMount() {
+    // Load blog posts first
+    try {
+      const blogPosts = await blogPostsModule.getBlogPosts();
+      this.setState({
+        blogPosts,
+        blogPostsLoaded: true,
+      });
+
+      // Check if we're on a blog route or blog post route
+      this.handleBlogRoutes();
+    } catch (error) {
+      console.error("Error loading blog posts:", error);
+      this.setState({ blogPostsLoaded: true });
+    }
+
     // Fetch project data from github
     const promises = projects.map((project) =>
       fetch(`https://api.github.com/repos/${project}`).then((res) => res.json())
@@ -68,7 +94,30 @@ class App extends Component<{}, AppState> {
     trackPageView(window.location.pathname + window.location.search);
   }
 
-  componentDidUpdate(_: any, prevState: AppState) {
+  handleBlogRoutes = () => {
+    const { blogPosts } = this.state;
+    // Check if we're on a blog route
+    const isBlogRoute = window.location.pathname.startsWith("/blogs");
+    if (isBlogRoute) {
+      this.setState({ showBlogPage: true });
+    } else {
+      // Check if we're on a blog post route
+      const match = window.location.pathname.match(
+        /\/blogs\/(\d+)\/([a-z0-9-]+)/
+      );
+      if (match) {
+        const [, postId, slug] = match;
+        const post = blogPosts.find(
+          (post) => post.id === postId && post.slug === slug
+        );
+        if (post) {
+          this.handleExecute("blog");
+        }
+      }
+    }
+  };
+
+  componentDidUpdate(_: any, prevState: AppComponentState) {
     // auto scroll
     if (
       prevState.record.length !== this.state.record.length &&
@@ -84,16 +133,66 @@ class App extends Component<{}, AppState> {
     trackPageView(window.location.pathname + window.location.search);
   }
 
+  handleBlogNavigate = () => {
+    this.setState({ showBlogPage: true });
+    window.history.pushState({}, "", "/blogs");
+    trackPageView("/blogs");
+  };
+
+  handleCloseBlog = () => {
+    this.setState({ showBlogPage: false });
+    window.history.pushState({}, "", "/");
+    trackPageView("/");
+  };
+
   render() {
-    const { record } = this.state;
+    const { record, showBlogPage, blogPosts } = this.state;
+    const title = "Rohan Sharma - Full Stack Developer";
+    const description =
+      "Rohan Sharma's portfolio. A full stack developer specializing in JavaScript and Node.js.";
+
+    // Check if we're on a blog post route to set appropriate meta
+    const match = window.location.pathname.match(
+      /\/blogs\/(\d+)\/([a-z0-9-]+)/
+    );
+    let blogTitle = title;
+    let blogDescription = description;
+
+    if (match) {
+      const [, postId] = match;
+      const post = blogPosts.find((post) => post.id === postId);
+      if (post) {
+        blogTitle = `${post.title} | ${title}`;
+        blogDescription = post.summary;
+      }
+    }
+
+    if (showBlogPage) {
+      return <BlogPage onClose={this.handleCloseBlog} />;
+    }
+
     return (
       <div className={styles.wrapper}>
         <SEO
-          title="Rohan Sharma - Full Stack Developer"
-          description="Rohan Sharma's portfolio. A full stack developer specializing in JavaScript and Node.js."
+          title={blogTitle}
+          description={blogDescription}
           image="https://avatars.githubusercontent.com/u/33249782?s=400&u=525a383fc9930aa547c76dfc0579ed44be306c86&v=4"
-          url="https://rohan.sh"
+          url={window.location.href}
         />
+
+        <div className={styles.blogNav}>
+          <a
+            href="/blogs"
+            className={styles.blogCta}
+            onClick={(e) => {
+              e.preventDefault();
+              this.handleBlogNavigate();
+            }}
+          >
+            Blog
+          </a>
+        </div>
+
         <div className={styles.window}>
           <div className={styles.titleBar}>
             <div className={styles.dotHolder}>

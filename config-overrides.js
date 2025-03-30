@@ -1,6 +1,26 @@
 const webpack = require("webpack");
 
 module.exports = function override(config, env) {
+  // Add support for MDX files
+  config.module.rules.push({
+    test: /\.mdx?$/,
+    use: [
+      {
+        loader: "babel-loader",
+        options: {
+          presets: ["@babel/preset-react"],
+        },
+      },
+      {
+        loader: "@mdx-js/loader",
+      },
+    ],
+  });
+
+  // Add .mdx extension to the resolved extensions
+  config.resolve.extensions.push(".mdx", ".md");
+
+  // Add fallbacks for node modules
   config.resolve.fallback = {
     ...config.resolve.fallback,
     http: require.resolve("stream-http"),
@@ -10,6 +30,8 @@ module.exports = function override(config, env) {
     stream: require.resolve("stream-browserify"),
     assert: require.resolve("assert/"),
     url: require.resolve("url/"),
+    path: require.resolve("path-browserify"),
+    fs: false,
   };
 
   return config;
