@@ -34,6 +34,10 @@
     "util": "^0.12.5",
     "web-vitals": "^2.1.0"
   },
+  "resolutions": {
+    "webpack": "^5.86.0",
+    "webpack-manifest-plugin": "^5.0.0"
+  },
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
