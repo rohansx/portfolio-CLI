@@ -4,6 +4,7 @@ import React from "react";
 // Import blog posts directly
 import advancedTypeScriptPatterns from "../blogs/2023-06-20/advanced-typescript-patterns";
 import buildingCliApplications from "../blogs/2023-07-10/building-cli-applications-nodejs";
+import vibeCodingToVulnerability from "../blogs/2024-03-25/vibe-coding-to-vulnerability";
 
 // Define MDX post type with component
 interface MDXPostData extends Omit<BlogPost, "content"> {
@@ -21,6 +22,7 @@ const fixedBuildingCliApplications = {
 
 // Blog posts collection - dynamically imported
 const BLOG_POSTS: BlogPost[] = [
+  vibeCodingToVulnerability,
   advancedTypeScriptPatterns,
   fixedBuildingCliApplications,
 ];
@@ -60,26 +62,57 @@ export async function getBlogPostBySlug(
 }
 
 /**
- * Increment view count for a blog post
+ * Increment view count for a blog post with persistent storage
  */
 export function incrementViewCount(postId: string): number {
   if (typeof window !== "undefined") {
-    const storageKey = `blog_views_${postId}`;
-    const currentViews = parseInt(localStorage.getItem(storageKey) || "0", 10);
+    // Define a persistent version key that doesn't change across deployments
+    const persistentKey = `blog_views_persistent_${postId}`;
+
+    // Get current views with fallback to zero
+    const currentViews = parseInt(
+      localStorage.getItem(persistentKey) || "0",
+      10
+    );
     const newViews = currentViews + 1;
-    localStorage.setItem(storageKey, newViews.toString());
+
+    // Store back to localStorage
+    localStorage.setItem(persistentKey, newViews.toString());
+
+    // For backward compatibility, also store in the old format
+    const legacyKey = `blog_views_${postId}`;
+    localStorage.setItem(legacyKey, newViews.toString());
+
     return newViews;
   }
   return 0;
 }
 
 /**
- * Get view count for a blog post
+ * Get view count for a blog post with persistent storage
  */
 export function getViewCount(postId: string): number {
   if (typeof window !== "undefined") {
-    const storageKey = `blog_views_${postId}`;
-    return parseInt(localStorage.getItem(storageKey) || "0", 10);
+    // First try the persistent key
+    const persistentKey = `blog_views_persistent_${postId}`;
+    const persistentViews = localStorage.getItem(persistentKey);
+
+    if (persistentViews) {
+      return parseInt(persistentViews, 10);
+    }
+
+    // Fall back to the legacy key (for backward compatibility)
+    const legacyKey = `blog_views_${postId}`;
+    const legacyViews = localStorage.getItem(legacyKey);
+
+    if (legacyViews) {
+      // If we found a legacy view count, migrate it to the persistent format
+      const viewCount = parseInt(legacyViews, 10);
+      localStorage.setItem(persistentKey, viewCount.toString());
+      return viewCount;
+    }
+
+    return 0;
   }
   return 0;
 }

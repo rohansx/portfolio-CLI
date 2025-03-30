@@ -4,9 +4,17 @@ import blogPostsModule from "../blogs";
 import styles from "../App/App.module.scss";
 import MarkdownRenderer from "./MarkdownRenderer";
 import SEO from "./SEO";
-import { getViewCount, incrementViewCount } from "../utils/blogUtils";
+import {
+  getViewCount as getViewCountOriginal,
+  incrementViewCount as incrementViewCountOriginal,
+} from "../utils/blogUtils";
 import { MDXProvider } from "@mdx-js/react";
 import Tweet from "./Tweet";
+// Import the async versions for future use
+import {
+  getViewCount as getViewCountAsync,
+  incrementViewCount as incrementViewCountAsync,
+} from "../utils/firebaseViewCount";
 
 // MDX components to enhance the MDX rendering
 const mdxComponents = {
@@ -105,21 +113,21 @@ const BlogPage: React.FC<BlogPageProps> = ({ onClose }) => {
         </div>
         <div className={styles.socialLinks}>
           <a
-            href="https://github.com/yourusername"
+            href="https://github.com/rohansx"
             target="_blank"
             rel="noopener noreferrer"
           >
             <i className="fab fa-github"></i>
           </a>
           <a
-            href="https://twitter.com/yourusername"
+            href="https://twitter.com/rsxwtf"
             target="_blank"
             rel="noopener noreferrer"
           >
             <i className="fab fa-twitter"></i>
           </a>
           <a
-            href="https://linkedin.com/in/yourusername"
+            href="https://linkedin.com/in/rohansx"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -129,6 +137,43 @@ const BlogPage: React.FC<BlogPageProps> = ({ onClose }) => {
       </div>
     );
   };
+
+  // Synchronous wrappers for the async functions
+  function getViewCount(postId: string): number {
+    // Start async fetch but don't wait for it
+    getViewCountAsync(postId)
+      .then((count) => {
+        // Cache the result from async function for future use
+        localStorage.setItem(
+          `blog_views_persistent_${postId}`,
+          count.toString()
+        );
+      })
+      .catch((err) => {
+        console.error("Error fetching view count:", err);
+      });
+
+    // Meanwhile, return the synchronous version
+    return getViewCountOriginal(postId);
+  }
+
+  function incrementViewCount(postId: string): number {
+    // Start async increment but don't wait for it
+    incrementViewCountAsync(postId)
+      .then((count) => {
+        // Cache the result from async function
+        localStorage.setItem(
+          `blog_views_persistent_${postId}`,
+          count.toString()
+        );
+      })
+      .catch((err) => {
+        console.error("Error incrementing view count:", err);
+      });
+
+    // Meanwhile, return the synchronous version
+    return incrementViewCountOriginal(postId);
+  }
 
   if (loading) {
     return (

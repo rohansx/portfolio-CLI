@@ -48,6 +48,11 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     }
   }, [processedHTML]);
 
+  // Helper function to escape regex special characters
+  const escapeRegExp = (string: string) => {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  };
+
   // Extract and deduplicate tweets based on ID to avoid duplicates
   const extractAndDedupeTweets = (content: string) => {
     // Find tweet placeholders in the content with optional captions
@@ -64,14 +69,25 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     const fullUrlRegex =
       /https?:\/\/(x\.com|twitter\.com)\/[^\/]+\/status\/(\d+)/g;
 
+    // Match Twitter URLs after "example" or when they're the only content on a line
+    // This helps identify links that should be treated as embeds
+    const exampleTweetRegex =
+      /(example|practice|here|show|demo|see).*?\s*:\s*\n*\s*(https?:\/\/(x\.com|twitter\.com)\/[^\/]+\/status\/(\d+))/gi;
+
     const tweetMatches = [...content.matchAll(tweetRegex)];
     const urlMatches = [...content.matchAll(twitterUrlRegex)];
     const fullUrlMatches = [...content.matchAll(fullUrlRegex)];
+    const exampleMatches = [...content.matchAll(exampleTweetRegex)];
 
     // Use a Map to deduplicate tweets based on their ID
     const tweetsMap = new Map<
       string,
-      { id: string; caption?: string; originalText: string }
+      {
+        id: string;
+        caption?: string;
+        originalText: string;
+        shouldEmbed: boolean;
+      }
     >();
 
     // Add tweets from each format, keeping original text for replacement later
@@ -81,6 +97,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
         id,
         caption: match[2] ? match[2].trim() : undefined,
         originalText: match[0],
+        shouldEmbed: true, // Always embed {tweet:ID} format
       });
     });
 
@@ -92,18 +109,48 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
           id,
           caption: undefined,
           originalText: match[0],
+          shouldEmbed: false,
         });
       }
     });
 
     fullUrlMatches.forEach((match) => {
       const id = match[2];
+      const url = match[0];
+
+      // Only add if it doesn't already exist
+      if (!tweetsMap.has(id)) {
+        // Check if this URL appears on its own line
+        const urlOnOwnLine = new RegExp(`^${escapeRegExp(url)}$`, "m");
+        const isStandalone = content.match(urlOnOwnLine) !== null;
+
+        // Check if this URL appears after a colon or "example" text
+        const afterExample = new RegExp(
+          `(example|practice|here|show|demo|see).*?:\\s*${escapeRegExp(url)}`,
+          "i"
+        );
+        const isAfterExample = content.match(afterExample) !== null;
+
+        tweetsMap.set(id, {
+          id,
+          caption: undefined,
+          originalText: url,
+          shouldEmbed: isStandalone || isAfterExample,
+        });
+      }
+    });
+
+    exampleMatches.forEach((match) => {
+      const id = match[3];
+      const url = match[2];
+
       // Only add if it doesn't already exist
       if (!tweetsMap.has(id)) {
         tweetsMap.set(id, {
           id,
           caption: undefined,
-          originalText: match[0],
+          originalText: url,
+          shouldEmbed: true,
         });
       }
     });
@@ -114,13 +161,16 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   // Process the markdown to HTML first
   useEffect(() => {
     const extractedTweets = extractAndDedupeTweets(content);
-    setTweets(extractedTweets);
+
+    // Filter tweets that should be embedded
+    const tweetsToEmbed = extractedTweets.filter((tweet) => tweet.shouldEmbed);
+    setTweets(tweetsToEmbed);
 
     // Process markdown into HTML
     let html = renderMarkdownToHTML(content);
 
     // Replace tweet placeholders with special markers
-    extractedTweets.forEach((tweet, index) => {
+    tweetsToEmbed.forEach((tweet, index) => {
       // Handle {tweet:ID} format
       const placeholderRegex = new RegExp(
         `<p>\\{tweet:${tweet.id}(?:\\|.*?)?\\}</p>`,
@@ -133,13 +183,20 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
         "g"
       );
 
-      // Handle full URLs https://x.com/username/status/ID format
+      // Handle full URLs https://x.com/username/status/ID format - but only when they're on their own line
       const fullUrlRegex = new RegExp(
         `<p>https?:\\/\\/(x\\.com|twitter\\.com)\\/[^\\/]+\\/status\\/${tweet.id}<\\/p>`,
         "g"
       );
 
-      // Replace all formats with placeholder divs
+      // Handle URLs after "example:" or similar phrases
+      const exampleRegex = new RegExp(
+        `(example|practice|here|show|demo|see).*?:\\s*<br \\/>\\s*<a href="https?:\\/\\/(x\\.com|twitter\\.com)\\/[^\\/]+\\/status\\/${tweet.id}".*?</a>`,
+        "gi"
+      );
+
+      // Only replace standalone tweets (those that appear on their own in a paragraph)
+      // Don't replace links that appear within paragraph content
       html = html
         .replace(
           placeholderRegex,
@@ -152,6 +209,10 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
         .replace(
           fullUrlRegex,
           `<div id="tweet-placeholder-${index}" data-tweet-id="${tweet.id}"></div>`
+        )
+        .replace(
+          exampleRegex,
+          `$1: <div id="tweet-placeholder-${index}" data-tweet-id="${tweet.id}"></div>`
         );
     });
 
@@ -218,7 +279,17 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       // Process bold and italic
       .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
       .replace(/\*(.*?)\*/g, "<em>$1</em>")
-      // Process links with special styling
+      // Process standalone URLs (on their own line) that match Twitter URLs - must be on a line by itself
+      .replace(
+        /^(https?:\/\/(x\.com|twitter\.com)\/[^\/]+\/status\/\d+)$/gm,
+        "<p>$1</p>"
+      )
+      // Special treatment for Twitter links - add Twitter link class
+      .replace(
+        /(https?:\/\/(x\.com|twitter\.com)\/[^\/]+\/status\/\d+)/g,
+        '<a href="$1" class="twitter-link" target="_blank" rel="noopener noreferrer">$1</a>'
+      )
+      // Process links with special styling - after Twitter links so they don't get double-processed
       .replace(/\[(.*?)\]\((.*?)\)/g, (_, text, url) => {
         // Skip if already processed as image
         if (text.startsWith("!")) return _;
@@ -229,6 +300,16 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
         const externalMark = isExternal
           ? ' <span class="external-link-icon">↗</span>'
           : "";
+
+        // Special case for Twitter/X links
+        const isTwitterLink = url.match(
+          /https?:\/\/(x\.com|twitter\.com)\/[^\/]+\/status\/\d+/
+        );
+
+        if (isTwitterLink) {
+          return `<a href="${escapeHtml(url)}" class="twitter-link md-link" target="_blank" rel="noopener noreferrer">${text}${externalMark}</a>`;
+        }
+
         return `<a href="${escapeHtml(url)}" class="md-link" ${
           isExternal ? 'target="_blank" rel="noopener noreferrer"' : ""
         }>${text}${externalMark}</a>`;
@@ -260,6 +341,16 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
             return `<ol>${block}</ol>`;
           }
           return `<ul>${block}</ul>`;
+        }
+
+        // Process raw URLs as paragraphs if they're not already wrapped
+        if (
+          block.match(
+            /^https?:\/\/(x\.com|twitter\.com)\/[^\/]+\/status\/\d+$/
+          ) &&
+          !block.startsWith("<p>")
+        ) {
+          return `<p>${block}</p>`;
         }
 
         // Process paragraphs
@@ -321,35 +412,99 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
   // Render content with React Tweet components
   const renderContent = () => {
-    return (
-      <>
-        <div
-          className={styles.markdownContent}
-          dangerouslySetInnerHTML={{ __html: processedHTML }}
-        />
-        {tweets.map((tweet, index) => {
-          // Find the placeholder element
-          const placeholder =
-            typeof document !== "undefined"
-              ? document.getElementById(`tweet-placeholder-${index}`)
-              : null;
+    // Create a modified HTML that includes Tweet components where the placeholders are
+    let contentWithTweets = processedHTML;
+    tweets.forEach((tweet, index) => {
+      const placeholderRegex = new RegExp(
+        `<div id="tweet-placeholder-${index}" data-tweet-id="${tweet.id}"></div>`,
+        "g"
+      );
 
-          // Only render if there's a placeholder or we're server-side
-          return (
-            <div
-              key={tweet.id}
-              className={styles.tweetContainer}
-              style={{
-                // Use margin to adjust position if placeholder exists
-                marginTop: placeholder ? "-1rem" : undefined,
-              }}
-            >
-              <Tweet id={tweet.id} caption={tweet.caption} />
+      // Replace placeholders with marker that we'll use to split the content
+      const uniqueMarker = `__TWEET_MARKER_${index}__`;
+      contentWithTweets = contentWithTweets.replace(
+        placeholderRegex,
+        uniqueMarker
+      );
+    });
+
+    // Split by markers
+    const contentParts = contentWithTweets.split(/__TWEET_MARKER_\d+__/);
+    const finalElements: JSX.Element[] = [];
+
+    // Keep track of consecutive tweets
+    let consecutiveTweets: JSX.Element[] = [];
+
+    // Build the final content with tweets inserted at the right places
+    contentParts.forEach((part, i) => {
+      // Add the content part if not empty
+      if (part.trim()) {
+        // If we had consecutive tweets before this text part, add them as a group
+        if (consecutiveTweets.length > 0) {
+          finalElements.push(
+            <div key={`tweet-group-${i}`} className={styles.tweetTestimonials}>
+              {consecutiveTweets}
             </div>
           );
-        })}
-      </>
-    );
+          consecutiveTweets = []; // Reset consecutive tweets
+        }
+
+        finalElements.push(
+          <div
+            key={`content-${i}`}
+            className={styles.markdownContent}
+            dangerouslySetInnerHTML={{ __html: part }}
+          />
+        );
+      }
+
+      // Add the tweet if there is one (there will be n-1 tweets for n content parts)
+      if (i < tweets.length) {
+        const tweetElement = (
+          <div key={`tweet-${i}`} className={styles.tweetContainer}>
+            <Tweet id={tweets[i].id} caption={tweets[i].caption} />
+          </div>
+        );
+
+        // If the next part is empty or just whitespace, or this is our last tweet,
+        // we'll group this tweet with others
+        const nextPartIsEmpty =
+          i + 1 < contentParts.length && !contentParts[i + 1].trim();
+
+        if (nextPartIsEmpty || part.trim() === "") {
+          // Add to consecutive tweets
+          consecutiveTweets.push(tweetElement);
+        } else {
+          // If we have consecutive tweets already, add this one and flush
+          if (consecutiveTweets.length > 0) {
+            consecutiveTweets.push(tweetElement);
+            finalElements.push(
+              <div
+                key={`tweet-group-${i}`}
+                className={styles.tweetTestimonials}
+              >
+                {consecutiveTweets}
+              </div>
+            );
+            consecutiveTweets = [];
+          } else {
+            // Just add this single tweet
+            finalElements.push(tweetElement);
+          }
+        }
+      }
+    });
+
+    // Add any remaining consecutive tweets
+    if (consecutiveTweets.length > 0) {
+      finalElements.push(
+        <div key="tweet-group-final" className={styles.tweetTestimonials}>
+          {consecutiveTweets}
+        </div>
+      );
+    }
+
+    return <>{finalElements}</>;
   };
 
   return renderContent();

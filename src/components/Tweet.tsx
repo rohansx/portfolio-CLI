@@ -28,12 +28,16 @@ const Tweet: React.FC<TweetProps> = ({ id, caption }) => {
   const tweetId = extractTweetId(id);
 
   return (
-    <div className={styles.tweetContainer}>
-      <div className={styles.tweetEmbed}>
-        <Suspense fallback={<TweetSkeleton />}>
-          <TweetEmbed id={tweetId} />
-        </Suspense>
-      </div>
+    <div className={styles.tweetEmbed}>
+      <Suspense
+        fallback={
+          <div className={styles.tweetSkeleton}>
+            <TweetSkeleton />
+          </div>
+        }
+      >
+        <TweetEmbed id={tweetId} />
+      </Suspense>
       {caption && <div className={styles.tweetCaption}>{caption}</div>}
     </div>
   );
