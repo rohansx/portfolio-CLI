@@ -5,16 +5,11 @@ import styles from "../App/App.module.scss";
 import MarkdownRenderer from "./MarkdownRenderer";
 import SEO from "./SEO";
 import {
-  getViewCount as getViewCountOriginal,
-  incrementViewCount as incrementViewCountOriginal,
-} from "../utils/blogUtils";
+  getViewCountSync,
+  incrementViewCountSync,
+} from "../utils/supabaseViewCount";
 import { MDXProvider } from "@mdx-js/react";
 import Tweet from "./Tweet";
-// Import the async versions for future use
-import {
-  getViewCount as getViewCountAsync,
-  incrementViewCount as incrementViewCountAsync,
-} from "../utils/firebaseViewCount";
 
 // MDX components to enhance the MDX rendering
 const mdxComponents = {
@@ -138,41 +133,13 @@ const BlogPage: React.FC<BlogPageProps> = ({ onClose }) => {
     );
   };
 
-  // Synchronous wrappers for the async functions
+  // Use synchronous versions that trigger async updates
   function getViewCount(postId: string): number {
-    // Start async fetch but don't wait for it
-    getViewCountAsync(postId)
-      .then((count) => {
-        // Cache the result from async function for future use
-        localStorage.setItem(
-          `blog_views_persistent_${postId}`,
-          count.toString()
-        );
-      })
-      .catch((err) => {
-        console.error("Error fetching view count:", err);
-      });
-
-    // Meanwhile, return the synchronous version
-    return getViewCountOriginal(postId);
+    return getViewCountSync(postId);
   }
 
   function incrementViewCount(postId: string): number {
-    // Start async increment but don't wait for it
-    incrementViewCountAsync(postId)
-      .then((count) => {
-        // Cache the result from async function
-        localStorage.setItem(
-          `blog_views_persistent_${postId}`,
-          count.toString()
-        );
-      })
-      .catch((err) => {
-        console.error("Error incrementing view count:", err);
-      });
-
-    // Meanwhile, return the synchronous version
-    return incrementViewCountOriginal(postId);
+    return incrementViewCountSync(postId);
   }
 
   if (loading) {

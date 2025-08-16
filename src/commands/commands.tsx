@@ -8,9 +8,10 @@ import { BlogList, BlogPostView } from "../components/Blog";
 import blogPostsModule from "../blogs";
 import {
   getBlogPostBySlug,
-  getViewCount,
-  incrementViewCount,
 } from "../utils/blogUtils";
+import {
+  incrementViewCount,
+} from "../utils/supabaseViewCount";
 
 import { useState, useEffect } from "react";
 interface ApodData {
