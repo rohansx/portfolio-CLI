@@ -5,7 +5,7 @@ import React from "react";
 import advancedTypeScriptPatterns from "../blogs/2023-06-20/advanced-typescript-patterns";
 import buildingCliApplications from "../blogs/2023-07-10/building-cli-applications-nodejs";
 import vibeCodingToVulnerability from "../blogs/2024-03-25/vibe-coding-to-vulnerability";
-import unlockingBrainPotentialLucyCognitiveEnhancement from "../blogs/2024-08-16/unlocking-brain-potential-lucy-cognitive-enhancement";
+import unlockingBrainPotentialLucyCognitiveEnhancement from "../blogs/2025-08-16/unlocking-brain-potential-lucy-cognitive-enhancement";
 
 // Define MDX post type with component
 interface MDXPostData extends Omit<BlogPost, "content"> {

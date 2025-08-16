@@ -3,7 +3,7 @@ import { BlogPost } from "../../typings";
 const unlockingBrainPotentialLucyCognitiveEnhancement: BlogPost = {
   id: "5",
   title: "Unlocking real brain potential: the science behind Lucy and evidence-based cognitive enhancement",
-  date: "2024-08-16",
+  date: "2025-08-16",
   author: "Rohan Sharma",
   summary: "The 2014 film Lucy popularized the myth that humans only use 10% of their brain. Modern neuroscience reveals we use virtually 100% of our brain, but the real story of cognitive enhancement lies in neuroplasticity and evidence-based interventions like exercise, nutrition, sleep optimization, and validated brain training.",
   slug: "unlocking-brain-potential-lucy-cognitive-enhancement",
