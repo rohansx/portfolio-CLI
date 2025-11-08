@@ -29,10 +29,22 @@
 	outline: none;
 	text-transform: lowercase;
 	padding: 0;
+	caret-color: var(--green);
+	position: relative;
 
 	&:focus {
 		border: none;
 		outline: none;
+	}
+}
+
+// Blinking cursor effect
+@keyframes cursor-blink {
+	from, to {
+		border-color: var(--light);
+	}
+	50% {
+		border-color: transparent;
 	}
 }
 
