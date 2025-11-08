@@ -6,14 +6,22 @@ import ListElement from "../ListElement/ListElement";
 import axios from "axios";
 import { BlogList, BlogPostView } from "../components/Blog";
 import blogPostsModule from "../blogs";
-import {
-  getBlogPostBySlug,
-} from "../utils/blogUtils";
-import {
-  incrementViewCount,
-} from "../utils/supabaseViewCount";
-
+import { getBlogPostBySlug } from "../utils/blogUtils";
+import { incrementViewCount } from "../utils/supabaseViewCount";
 import { useState, useEffect } from "react";
+import { github_username } from "../config";
+import LoadingSkeleton from "../components/LoadingSkeleton";
+import ErrorBoundary from "../components/ErrorBoundary";
+import {
+  CowsayCommand,
+  MatrixCommand,
+  NeofetchCommand,
+  HackCommand,
+  ExportCommand,
+  EvalCommand,
+  ActivityCommand,
+  AnalyticsCommand,
+} from "../components/EasterEggs";
 interface ApodData {
   title: string;
   url: string;
@@ -40,7 +48,7 @@ const HistoryCommand = () => {
       });
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <LoadingSkeleton message="Loading historical events" />;
   return (
     <ul>
       {events.map((event: { year: string; text: string }, index: number) => (
@@ -79,8 +87,8 @@ const SpaceCommand = () => {
       });
   }, []);
 
-  if (loading) return <div>Loading...</div>;
-  if (error || !apodData) return <div>Error loading APOD data</div>; // Check for error state
+  if (loading) return <LoadingSkeleton message="Loading NASA APOD" type="spinner" />;
+  if (error || !apodData) return <div style={{color: 'var(--red)'}}>Error loading APOD data. Check if NASA_API_KEY is configured.</div>;
   return (
     <div className="space">
       <h3>{apodData.title}</h3>
@@ -130,7 +138,7 @@ const CatCommand = () => {
       });
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <LoadingSkeleton message="Fetching a cute cat" type="spinner" />;
   return (
     <div className={styles.catImageContainer}>
       <img src={catImageUrl} alt="Random Cat" className={styles.catImage} />
@@ -162,7 +170,7 @@ const MemeCommand = () => {
       });
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <LoadingSkeleton message="Loading dank meme" type="spinner" />;
   return (
     <div className={styles.memeImageContainer}>
       <img src={memeUrl} alt="Random Meme" className={styles.memeImage} />
@@ -375,6 +383,102 @@ const rawCommands: Command[] = [
     description: "See a glimpse of the future!",
     execute(app) {
       return <FutureCommand />;
+    },
+  },
+
+  // Easter Egg Commands
+  {
+    name: "cowsay",
+    icon: "fas fa-fw fa-comment",
+    description: "Make the cow say something",
+    execute(app) {
+      const args = app.state.record[app.state.record.length - 1]?.command.split(" ").slice(1).join(" ");
+      return <ErrorBoundary><CowsayCommand message={args || undefined} /></ErrorBoundary>;
+    },
+  },
+
+  {
+    name: "matrix",
+    icon: "fas fa-fw fa-code",
+    description: "Enter the Matrix",
+    execute(app) {
+      return <ErrorBoundary><MatrixCommand /></ErrorBoundary>;
+    },
+  },
+
+  {
+    name: "neofetch",
+    icon: "fas fa-fw fa-terminal",
+    description: "Display system information",
+    execute(app) {
+      return <ErrorBoundary><NeofetchCommand /></ErrorBoundary>;
+    },
+  },
+
+  {
+    name: "hack",
+    icon: "fas fa-fw fa-user-secret",
+    description: "Initiate hack sequence (just for fun!)",
+    execute(app) {
+      return <ErrorBoundary><HackCommand /></ErrorBoundary>;
+    },
+  },
+
+  // Utility Commands
+  {
+    name: "export",
+    icon: "fas fa-fw fa-download",
+    description: "Export terminal session to a file",
+    execute(app) {
+      return <ErrorBoundary><ExportCommand record={app.state.record} /></ErrorBoundary>;
+    },
+  },
+
+  {
+    name: "eval",
+    icon: "fas fa-fw fa-calculator",
+    description: "Evaluate JavaScript expression (e.g., eval 2+2)",
+    execute(app) {
+      const args = app.state.record[app.state.record.length - 1]?.command.split(" ").slice(1).join(" ");
+      if (!args) {
+        return <div style={{color: 'var(--yellow)'}}>Usage: eval {'<expression>'}<br/>Example: eval 2+2</div>;
+      }
+      return <ErrorBoundary><EvalCommand code={args} /></ErrorBoundary>;
+    },
+  },
+
+  {
+    name: "js",
+    icon: "fab fa-fw fa-js",
+    description: "Execute JavaScript code",
+    execute(app) {
+      const args = app.state.record[app.state.record.length - 1]?.command.split(" ").slice(1).join(" ");
+      if (!args) {
+        return <div style={{color: 'var(--yellow)'}}>Usage: js {'<code>'}<br/>Example: js Math.random()</div>;
+      }
+      return <ErrorBoundary><EvalCommand code={args} /></ErrorBoundary>;
+    },
+  },
+
+  // GitHub Commands
+  {
+    name: "activity",
+    icon: "fab fa-fw fa-github",
+    description: "Show recent GitHub activity",
+    execute(app) {
+      return <ErrorBoundary><ActivityCommand username={github_username} /></ErrorBoundary>;
+    },
+  },
+
+  // Analytics Commands
+  {
+    name: "stats",
+    icon: "fas fa-fw fa-chart-bar",
+    description: "Show terminal usage statistics",
+    execute(app) {
+      // We'll need to get analytics from somewhere - for now use placeholder
+      const analytics = JSON.parse(localStorage.getItem('terminal_analytics') || '{"commandCounts":{}, "totalCommands":0}');
+      return <ErrorBoundary><AnalyticsCommand analytics={analytics} /></ErrorBoundary>;
     },
   },
 

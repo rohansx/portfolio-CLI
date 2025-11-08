@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { ListElementProps } from '../typings'
 import styles from './ListElement.module.scss'
 
-const ListElement = (props: ListElementProps) => {
+const ListElement: React.FC<ListElementProps> = memo((props: ListElementProps) => {
 	const { icon, name, link, description, help } = props
 	return (
 		<div className={styles.listElement}>
@@ -19,6 +19,8 @@ const ListElement = (props: ListElementProps) => {
 			<em>{description}</em>
 		</div>
 	)
-}
+})
+
+ListElement.displayName = 'ListElement'
 
 export default ListElement

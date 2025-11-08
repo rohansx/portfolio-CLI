@@ -1,8 +1,17 @@
-import { createRoot } from "react-dom/client";
-import App from "./App/App";
-import "./index.scss";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.scss';
+import AppNew from './App/AppNew';
+import { AppProvider } from './context/AppContext';
 
-const container = document.getElementById("root");
-// Type assertion for root element
-const root = createRoot(container!);
-root.render(<App />);
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement
+);
+
+root.render(
+  <React.StrictMode>
+    <AppProvider>
+      <AppNew />
+    </AppProvider>
+  </React.StrictMode>
+);

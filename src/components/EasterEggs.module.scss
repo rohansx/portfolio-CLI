@@ -1,0 +1,240 @@
+// Easter eggs styling
+.cowsay {
+  color: var(--green);
+  font-family: var(--font-code);
+  font-size: 0.85em;
+  line-height: 1.2;
+  margin: 10px 0;
+}
+
+.matrix {
+  margin: 10px 0;
+}
+
+.matrixText {
+  color: var(--green);
+  font-family: var(--font-code);
+  font-size: 0.7em;
+  line-height: 1.1;
+  animation: matrix-flicker 0.1s infinite;
+  text-shadow: 0 0 5px var(--green);
+}
+
+@keyframes matrix-flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.95; }
+}
+
+.matrixMessage {
+  color: var(--muted);
+  font-size: 0.9em;
+  margin-top: 10px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.neofetch {
+  color: var(--blue);
+  font-family: var(--font-code);
+  font-size: 0.85em;
+  line-height: 1.4;
+  margin: 10px 0;
+}
+
+.hack {
+  margin: 10px 0;
+}
+
+.hackStage {
+  color: var(--light);
+  font-family: var(--font-code);
+  margin: 5px 0;
+}
+
+.hackPrompt {
+  color: var(--red);
+  font-weight: bold;
+}
+
+.hackSuccess {
+  color: var(--green);
+  font-weight: bold;
+  animation: success-blink 0.5s 3;
+}
+
+@keyframes success-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.progressBar {
+  position: relative;
+  width: 100%;
+  height: 20px;
+  background-color: var(--dark);
+  border: 1px solid var(--muted);
+  border-radius: 3px;
+  margin: 10px 0;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--green), var(--blue));
+  transition: width 0.1s linear;
+}
+
+.progressText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--light);
+  font-size: 0.8em;
+  font-weight: bold;
+  text-shadow: 0 0 3px black;
+}
+
+.exportButton {
+  background-color: var(--blue);
+  color: var(--darkest);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: var(--font-normal);
+  font-size: 0.9em;
+  margin: 10px 0;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: var(--light);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.eval {
+  margin: 10px 0;
+}
+
+.evalInput {
+  color: var(--muted);
+  font-family: var(--font-code);
+  margin: 5px 0;
+}
+
+.evalResult {
+  color: var(--green);
+  font-family: var(--font-code);
+  margin: 5px 0;
+  padding: 10px;
+  background-color: rgba(0, 255, 0, 0.05);
+  border-left: 3px solid var(--green);
+}
+
+.evalError {
+  color: var(--red);
+  font-family: var(--font-code);
+  margin: 5px 0;
+  padding: 10px;
+  background-color: rgba(255, 0, 0, 0.05);
+  border-left: 3px solid var(--red);
+}
+
+.activity {
+  margin: 10px 0;
+
+  h3 {
+    color: var(--blue);
+    margin-bottom: 10px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+
+    li {
+      display: flex;
+      gap: 15px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--dark);
+      font-family: var(--font-code);
+      font-size: 0.9em;
+    }
+  }
+}
+
+.activityType {
+  color: var(--yellow);
+  width: 100px;
+  flex-shrink: 0;
+}
+
+.activityRepo {
+  color: var(--light);
+  flex: 1;
+}
+
+.activityTime {
+  color: var(--muted);
+  font-size: 0.85em;
+}
+
+.analytics {
+  margin: 10px 0;
+
+  h3, h4 {
+    color: var(--blue);
+    margin: 15px 0 10px;
+  }
+
+  p {
+    margin: 10px 0;
+
+    strong {
+      color: var(--green);
+    }
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+
+    li {
+      display: flex;
+      gap: 10px;
+      padding: 5px 0;
+      font-family: var(--font-code);
+      font-size: 0.9em;
+      align-items: center;
+    }
+  }
+}
+
+.analyticsCommand {
+  color: var(--yellow);
+  width: 100px;
+  flex-shrink: 0;
+}
+
+.analyticsBar {
+  color: var(--green);
+  flex: 1;
+  font-size: 0.8em;
+  line-height: 1;
+}
+
+.analyticsCount {
+  color: var(--muted);
+  width: 40px;
+  text-align: right;
+  flex-shrink: 0;
+}
