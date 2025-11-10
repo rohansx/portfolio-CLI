@@ -12,7 +12,7 @@ export interface CommandRecord {
 export interface AppSettings {
   typewriterSpeed: number; // characters per second
   typewriterEnabled: boolean;
-  theme: 'default' | 'matrix' | 'retro' | 'hacker';
+  theme: 'default' | 'matrix' | 'retro' | 'cyberpunk' | 'hacker';
   soundEnabled: boolean;
 }
 

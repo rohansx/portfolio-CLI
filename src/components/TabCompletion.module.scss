@@ -1,0 +1,59 @@
+.dropdown {
+  position: absolute;
+  background: var(--darkest);
+  border: 1px solid var(--muted);
+  border-radius: 4px;
+  min-width: 200px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-family: var(--font-code);
+  font-size: 0.9em;
+  color: var(--light);
+  transition: all 0.1s;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover,
+  &.selected {
+    background: var(--dark);
+    color: var(--green);
+  }
+
+  &.selected {
+    border-left: 3px solid var(--green);
+  }
+}
+
+.icon {
+  margin-right: 8px;
+  color: var(--green);
+  font-size: 0.8em;
+}
+
+.text {
+  flex: 1;
+}
