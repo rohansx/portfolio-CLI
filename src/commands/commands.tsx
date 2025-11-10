@@ -482,6 +482,17 @@ const rawCommands: Command[] = [
     },
   },
 
+  // Theme Command
+  {
+    name: "theme",
+    icon: "fas fa-fw fa-palette",
+    description: "Change terminal theme (default, matrix, retro, cyberpunk, hacker)",
+    execute(app) {
+      const { ThemeCommand } = require('../components/ThemeSwitcher');
+      return <ErrorBoundary><ThemeCommand /></ErrorBoundary>;
+    },
+  },
+
   {
     name: "clear",
     icon: "fas fa-fw fa-eraser",
