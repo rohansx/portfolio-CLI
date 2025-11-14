@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.scss';
-import AppNew2 from './App/AppNew2';
+import AppFinal from './App/AppFinal';
 import { AppProvider } from './context/AppContext';
 
 const root = ReactDOM.createRoot(
@@ -11,7 +11,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <AppProvider>
-      <AppNew2 />
+      <AppFinal />
     </AppProvider>
   </React.StrictMode>
 );

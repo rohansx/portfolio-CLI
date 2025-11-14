@@ -1,0 +1,399 @@
+// Clean, minimal Apple-style terminal
+
+.wrapper {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--darkest);
+  background-size: cover;
+}
+
+.window {
+  background-color: var(--darkest);
+  margin: auto;
+  height: calc(100vh - 10px);
+  max-height: 600px;
+  width: 700px;
+  padding: 0;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); // Apple easing
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    10px -1px 180px 1px rgba(10, 198, 204, 0.35);
+  animation: fadeInScale 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  &:hover {
+    box-shadow:
+      0 25px 50px -12px rgba(0, 0, 0, 0.6),
+      0 0 0 1px rgba(255, 255, 255, 0.08),
+      10px -1px 200px 1px rgba(10, 198, 204, 0.45);
+  }
+}
+
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+// Shake animation - subtle
+.shake {
+  animation: gentleShake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+@keyframes gentleShake {
+  10%, 90% { transform: translateX(-2px); }
+  20%, 80% { transform: translateX(2px); }
+  30%, 50%, 70% { transform: translateX(-2px); }
+  40%, 60% { transform: translateX(2px); }
+}
+
+// Smooth command output
+.commandOutput {
+  animation: slideUp 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.output {
+  margin-top: 5px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+// Title Bar - Clean macOS style
+.titleBar {
+  position: relative;
+  background: rgba(30, 30, 30, 0.95);
+  border-radius: 12px 12px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: move;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.2s ease;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+// Traffic Lights - macOS style
+.trafficLights {
+  position: absolute;
+  left: 16px;
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.light {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  padding: 0;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  &:hover::before {
+    opacity: 1;
+  }
+
+  &:active {
+    transform: scale(0.9);
+  }
+}
+
+.red {
+  background: #ff5f57;
+
+  &::before {
+    background: #ff5f57;
+    box-shadow: 0 0 8px rgba(255, 95, 87, 0.6);
+  }
+
+  &:hover {
+    background: #ff6e66;
+  }
+}
+
+.yellow {
+  background: #ffbd2e;
+
+  &::before {
+    background: #ffbd2e;
+    box-shadow: 0 0 8px rgba(255, 189, 46, 0.6);
+  }
+
+  &:hover {
+    background: #ffca3d;
+  }
+}
+
+.green {
+  background: #28c840;
+
+  &::before {
+    background: #28c840;
+    box-shadow: 0 0 8px rgba(40, 200, 64, 0.6);
+  }
+
+  &:hover {
+    background: #37d74f;
+  }
+}
+
+// Title Text - Centered
+.titleText {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  font-family: var(--font-code);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+// Main Content
+.mainContent {
+  padding: 20px;
+  flex: 1 1;
+  overflow: hidden scroll;
+  font-family: var(--font-code);
+  font-size: var(--font-size-regular);
+  color: var(--light);
+  line-height: 1.5;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color 0.25s;
+
+  &:hover {
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+  }
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    transition: background 0.2s;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+  }
+}
+
+.promptPrefix span:nth-of-type(1) {
+  color: var(--blue);
+}
+
+.promptPrefix span:nth-of-type(2) {
+  color: var(--light-yellow);
+}
+
+.validCommand {
+  color: var(--green) !important;
+}
+
+.invalidCommand {
+  color: var(--red) !important;
+}
+
+// Resize Handle - Invisible but functional
+.resizeHandle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 24px;
+  height: 24px;
+  cursor: nwse-resize;
+  opacity: 0;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.3;
+  }
+}
+
+// Minimized Bar - Clean
+.minimizedBar {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(20, 20, 20, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 12px 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--light);
+  font-family: var(--font-code);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  animation: slideUpFade 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: all 0.2s;
+
+  i {
+    color: var(--green);
+    font-size: 14px;
+  }
+
+  span {
+    font-size: 13px;
+    opacity: 0.8;
+  }
+
+  &:hover {
+    background: rgba(30, 30, 30, 0.95);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  &:active {
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+// Blog Link - Floating, minimal
+.blogLink {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  padding: 10px 20px;
+  background: rgba(20, 20, 20, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: var(--light);
+  text-decoration: none;
+  font-family: var(--font-normal);
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  z-index: 100;
+
+  &:hover {
+    background: rgba(30, 30, 30, 0.9);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+/* Responsive - Mobile */
+@media only screen and (max-width: 700px), (max-height: 300px) {
+  .window {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    border-radius: 0 !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    transform: none !important;
+    margin: 0;
+  }
+
+  .titleBar {
+    border-radius: 0;
+  }
+
+  .mainContent {
+    padding: 16px;
+  }
+
+  .resizeHandle {
+    display: none;
+  }
+
+  .blogLink {
+    top: 16px;
+    right: 16px;
+    font-size: 12px;
+    padding: 8px 16px;
+  }
+
+  .trafficLights {
+    left: 12px;
+  }
+}
+
+/* Touch devices */
+@media (pointer: coarse) {
+  .titleBar {
+    touch-action: none;
+  }
+
+  .light {
+    width: 14px;
+    height: 14px;
+  }
+}
