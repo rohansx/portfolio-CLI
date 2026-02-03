@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './StatusBar.module.scss';
 import { useApp } from '../context/AppContext';
+import { incrementVisitorCount, getVisitorCount } from '../utils/portfolioApi';
 
 interface StatusBarProps {
   mode?: 'cli' | 'gui';
@@ -33,22 +34,29 @@ const StatusBar: React.FC<StatusBarProps> = ({ mode = 'cli', onModeToggle }) => 
     };
   }, []);
 
-  // Get/increment visitor count
+  // Get visitor count from API
   useEffect(() => {
-    const VISITOR_KEY = 'portfolio_total_visitors';
-    const VISITED_KEY = 'portfolio_has_visited';
+    const fetchCount = async () => {
+      try {
+        // Increment if first visit in session
+        const count = await incrementVisitorCount();
+        setVisitorCount(count);
+      } catch (error) {
+        // Fallback
+        const cached = localStorage.getItem('portfolio_visitors');
+        setVisitorCount(cached ? parseInt(cached, 10) : 1337);
+      }
+    };
     
-    // Get current count
-    let count = parseInt(localStorage.getItem(VISITOR_KEY) || '1337', 10);
+    fetchCount();
     
-    // Increment if first visit in this session
-    if (!sessionStorage.getItem(VISITED_KEY)) {
-      count += 1;
-      localStorage.setItem(VISITOR_KEY, count.toString());
-      sessionStorage.setItem(VISITED_KEY, 'true');
-    }
+    // Refresh count every 60 seconds
+    const interval = setInterval(async () => {
+      const count = await getVisitorCount();
+      setVisitorCount(count);
+    }, 60000);
     
-    setVisitorCount(count);
+    return () => clearInterval(interval);
   }, []);
 
   const formatTime = (date: Date) => {

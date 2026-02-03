@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { BlogPost } from "../typings";
 import styles from "../commands/commands.module.scss";
 import MarkdownRenderer from "./MarkdownRenderer";
-import { getViewCountSync, incrementViewCountSync } from "../utils/supabaseViewCount";
+import { getBlogViewCount, incrementBlogViewCount } from "../utils/portfolioApi";
 
 interface BlogListProps {
   posts: BlogPost[];
@@ -14,14 +14,17 @@ const BlogCard: React.FC<{ post: BlogPost }> = ({ post }) => {
 
   useEffect(() => {
     // Get view count for this post
-    const count = getViewCountSync(post.id);
-    setViewCount(count);
+    const fetchCount = async () => {
+      const count = await getBlogViewCount(post.id);
+      setViewCount(count);
+    };
+    fetchCount();
   }, [post.id]);
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = async (e: React.MouseEvent) => {
     e.preventDefault();
     // Increment view count when clicking to read
-    const newCount = incrementViewCountSync(post.id);
+    const newCount = await incrementBlogViewCount(post.id);
     setViewCount(newCount);
     window.history.pushState(
       { id: post.id },
@@ -78,8 +81,11 @@ export const BlogPostView: React.FC<BlogPostProps> = ({ post }) => {
 
   useEffect(() => {
     // Increment view count when post is viewed
-    const count = incrementViewCountSync(post.id);
-    setViewCount(count);
+    const incrementCount = async () => {
+      const count = await incrementBlogViewCount(post.id);
+      setViewCount(count);
+    };
+    incrementCount();
   }, [post.id]);
 
   return (
