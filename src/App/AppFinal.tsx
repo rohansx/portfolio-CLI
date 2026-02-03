@@ -11,6 +11,7 @@ import { KeyboardShortcutsModal, CommandPalette } from '../components/KeyboardSh
 import { resolveAlias } from '../utils/commandAliases';
 import { useDraggable } from '../hooks/useDraggable';
 import { useResizable } from '../hooks/useResizable';
+import StatusBar from '../components/StatusBar';
 
 const AppFinal: React.FC = () => {
   const windowRef = useRef<HTMLDivElement>(null);
@@ -348,6 +349,9 @@ const AppFinal: React.FC = () => {
             onShowPalette={() => setShowPalette(true)}
           />
         </div>
+
+        {/* Status Bar */}
+        <StatusBar mode="cli" />
 
         {/* Resize handle - invisible but functional */}
         {!isMaximized && (

@@ -348,8 +348,27 @@
   }
 }
 
+/* Responsive - Tablet */
+@media only screen and (max-width: 1024px) and (min-width: 701px) {
+  .window {
+    width: 90% !important;
+    max-width: 800px;
+    height: calc(100vh - 80px) !important;
+    max-height: 700px !important;
+  }
+
+  .mainContent {
+    font-size: 13px;
+  }
+}
+
 /* Responsive - Mobile */
-@media only screen and (max-width: 700px), (max-height: 300px) {
+@media only screen and (max-width: 700px), (max-height: 400px) {
+  .wrapper {
+    padding: 0;
+    justify-content: flex-start;
+  }
+
   .window {
     width: 100% !important;
     height: 100% !important;
@@ -360,14 +379,22 @@
     left: 0 !important;
     transform: none !important;
     margin: 0;
+    box-shadow: none;
   }
 
   .titleBar {
     border-radius: 0;
+    padding: 10px 12px;
+  }
+
+  .titleText {
+    font-size: 12px;
   }
 
   .mainContent {
-    padding: 16px;
+    padding: 12px;
+    font-size: 13px;
+    line-height: 1.5;
   }
 
   .resizeHandle {
@@ -375,14 +402,41 @@
   }
 
   .blogLink {
-    top: 16px;
-    right: 16px;
-    font-size: 12px;
-    padding: 8px 16px;
+    top: 12px;
+    right: 12px;
+    font-size: 11px;
+    padding: 6px 12px;
+    z-index: 1000;
   }
 
   .trafficLights {
     left: 12px;
+    
+    .light {
+      width: 10px;
+      height: 10px;
+    }
+  }
+
+  .commandOutput {
+    margin-bottom: 12px;
+  }
+
+  .promptPrefix {
+    font-size: 12px;
+  }
+}
+
+/* Very small screens */
+@media only screen and (max-width: 380px) {
+  .mainContent {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  .blogLink {
+    padding: 4px 8px;
+    font-size: 10px;
   }
 }
 
@@ -390,10 +444,32 @@
 @media (pointer: coarse) {
   .titleBar {
     touch-action: none;
+    padding: 12px 16px;
   }
 
   .light {
     width: 14px;
     height: 14px;
+    margin-right: 8px;
+  }
+
+  .mainContent {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Landscape mobile */
+@media only screen and (max-height: 500px) and (orientation: landscape) {
+  .titleBar {
+    padding: 8px 12px;
+  }
+
+  .trafficLights .light {
+    width: 10px;
+    height: 10px;
+  }
+
+  .mainContent {
+    padding: 8px 12px;
   }
 }
