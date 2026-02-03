@@ -1,18 +1,28 @@
 .wrapper {
   position: absolute;
-  //   top: 0;
-  //   left: 0%;
+  top: 0;
+  left: 0;
   height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: var(--darkest);
-  // background-image: url(../../public/grid_deep.svg);
-  //   background-size: 300%;
-  background-size: cover;
+  justify-content: center;
+  background-color: #0a0a0a;
+  overflow: hidden;
+}
 
-  //   filter: grayscale(100%);
+.gridCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.3;
+  background-image: 
+    radial-gradient(circle, rgba(20, 184, 166, 0.15) 1px, transparent 1px);
+  background-size: 30px 30px;
 }
 
 .wrapperBlog {
@@ -29,8 +39,11 @@
   margin-top: auto;
   margin-bottom: auto;
   height: calc(100vh - 10px);
-  max-height: 600px;
-  width: 700px;
+  max-height: 750px;
+  min-height: 400px;
+  width: 850px;
+  min-width: 500px;
+  max-width: 95vw;
   padding: 0;
   border-radius: var(--round-border-radius);
   display: flex;
@@ -51,26 +64,38 @@
   }
 }
 
-.resizeHandle {
+// Resize edges - invisible but interactive
+.resizeEdge {
   position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 20px;
-  height: 20px;
-  cursor: nwse-resize;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--muted);
-  font-size: 10px;
-  opacity: 0.5;
-  transition: opacity 0.2s;
-
-  &:hover {
-    opacity: 1;
-    color: var(--light);
-  }
+  z-index: 10;
 }
+
+.resizeN, .resizeS {
+  left: 8px;
+  right: 8px;
+  height: 8px;
+}
+
+.resizeE, .resizeW {
+  top: 8px;
+  bottom: 8px;
+  width: 8px;
+}
+
+.resizeN { top: -4px; cursor: ns-resize; }
+.resizeS { bottom: -4px; cursor: ns-resize; }
+.resizeE { right: -4px; cursor: ew-resize; }
+.resizeW { left: -4px; cursor: ew-resize; }
+
+.resizeNE, .resizeNW, .resizeSE, .resizeSW {
+  width: 16px;
+  height: 16px;
+}
+
+.resizeNE { top: -4px; right: -4px; cursor: nesw-resize; }
+.resizeNW { top: -4px; left: -4px; cursor: nwse-resize; }
+.resizeSE { bottom: -4px; right: -4px; cursor: nwse-resize; }
+.resizeSW { bottom: -4px; left: -4px; cursor: nesw-resize; }
 
 .minimizedBar {
   position: fixed;
@@ -309,6 +334,31 @@ $dots: (
     user-select: none;
     -webkit-user-select: none;
     touch-action: none;
+  }
+}
+
+/* GUI Toggle Button */
+.guiToggle {
+  position: fixed;
+  top: 24px;
+  left: 24px;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #888;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+
+  &:hover {
+    background: rgba(20, 184, 166, 0.1);
+    border-color: rgba(20, 184, 166, 0.3);
+    color: #14b8a6;
+    transform: scale(1.05);
   }
 }
 

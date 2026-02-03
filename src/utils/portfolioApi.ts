@@ -5,7 +5,8 @@
  * Falls back to localStorage if API is unavailable.
  */
 
-const API_BASE = process.env.REACT_APP_API_URL || 'https://vibeguard.io/api/portfolio';
+// Use same origin for API calls (works in dev and prod)
+const API_BASE = '/api/portfolio';
 
 // Cache for reducing API calls
 const cache: Record<string, { value: number; timestamp: number }> = {};
