@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import styles from './InputManager.module.scss';
-import { github_username } from '../config';
 import { useApp } from '../context/AppContext';
 import { useCommandHistory } from '../hooks/useCommandHistory';
 import { resolveAlias } from '../utils/commandAliases';
@@ -163,7 +162,7 @@ const InputManagerNew: React.FC<InputManagerProps> = ({
   return (
     <div className={styles.inputWrapper}>
       <span className={styles.promptPrefix}>
-        <span>{github_username}</span>@<span>sh:</span>
+        <span>rohan</span>@<span>sh:</span>
         ~$&nbsp;
       </span>
       <form action="#" onSubmit={handleSubmit} className={styles.inputForm}>

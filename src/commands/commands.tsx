@@ -9,19 +9,13 @@ import blogPostsModule from "../blogs";
 import { getBlogPostBySlug } from "../utils/blogUtils";
 import { incrementViewCount } from "../utils/supabaseViewCount";
 import { useState, useEffect } from "react";
-import { github_username } from "../config";
 import LoadingSkeleton from "../components/LoadingSkeleton";
 import ErrorBoundary from "../components/ErrorBoundary";
 import { profileData } from "../data/resume";
 import {
-  CowsayCommand,
   MatrixCommand,
-  NeofetchCommand,
-  HackCommand,
   ExportCommand,
   EvalCommand,
-  ActivityCommand,
-  AnalyticsCommand,
 } from "../components/EasterEggs";
 interface ApodData {
   title: string;
@@ -387,44 +381,6 @@ const rawCommands: Command[] = [
     },
   },
 
-  // Easter Egg Commands
-  {
-    name: "cowsay",
-    icon: "fas fa-fw fa-comment",
-    description: "Make the cow say something",
-    execute(app) {
-      const args = app.state.record[app.state.record.length - 1]?.command.split(" ").slice(1).join(" ");
-      return <ErrorBoundary><CowsayCommand message={args || undefined} /></ErrorBoundary>;
-    },
-  },
-
-  {
-    name: "matrix",
-    icon: "fas fa-fw fa-code",
-    description: "Enter the Matrix",
-    execute(app) {
-      return <ErrorBoundary><MatrixCommand /></ErrorBoundary>;
-    },
-  },
-
-  {
-    name: "neofetch",
-    icon: "fas fa-fw fa-terminal",
-    description: "Display system information",
-    execute(app) {
-      return <ErrorBoundary><NeofetchCommand /></ErrorBoundary>;
-    },
-  },
-
-  {
-    name: "hack",
-    icon: "fas fa-fw fa-user-secret",
-    description: "Initiate hack sequence (just for fun!)",
-    execute(app) {
-      return <ErrorBoundary><HackCommand /></ErrorBoundary>;
-    },
-  },
-
   // Utility Commands
   {
     name: "export",
@@ -449,37 +405,11 @@ const rawCommands: Command[] = [
   },
 
   {
-    name: "js",
-    icon: "fab fa-fw fa-js",
-    description: "Execute JavaScript code",
+    name: "matrix",
+    icon: "fas fa-fw fa-code",
+    description: "Enter the Matrix",
     execute(app) {
-      const args = app.state.record[app.state.record.length - 1]?.command.split(" ").slice(1).join(" ");
-      if (!args) {
-        return <div style={{color: 'var(--yellow)'}}>Usage: js {'<code>'}<br/>Example: js Math.random()</div>;
-      }
-      return <ErrorBoundary><EvalCommand code={args} /></ErrorBoundary>;
-    },
-  },
-
-  // GitHub Commands
-  {
-    name: "activity",
-    icon: "fab fa-fw fa-github",
-    description: "Show recent GitHub activity",
-    execute(app) {
-      return <ErrorBoundary><ActivityCommand username={github_username} /></ErrorBoundary>;
-    },
-  },
-
-  // Analytics Commands
-  {
-    name: "stats",
-    icon: "fas fa-fw fa-chart-bar",
-    description: "Show terminal usage statistics",
-    execute(app) {
-      // We'll need to get analytics from somewhere - for now use placeholder
-      const analytics = JSON.parse(localStorage.getItem('terminal_analytics') || '{"commandCounts":{}, "totalCommands":0}');
-      return <ErrorBoundary><AnalyticsCommand analytics={analytics} /></ErrorBoundary>;
+      return <ErrorBoundary><MatrixCommand /></ErrorBoundary>;
     },
   },
 
@@ -543,69 +473,6 @@ const rawCommands: Command[] = [
         record: [],
       });
       return null;
-    },
-  },
-
-  {
-    name: "blogpost",
-    icon: "fas fa-fw fa-file-alt",
-    description: "Open a specific blog post by ID",
-    execute(app) {
-      const args =
-        app.state.record[app.state.record.length - 1].command.split(" ");
-      const postId = args[1];
-
-      if (!postId) {
-        return <AsyncBlogList />;
-      }
-
-      const AsyncBlogPostById = () => {
-        const [post, setPost] = React.useState<any>(null);
-        const [loading, setLoading] = React.useState(true);
-        const [error, setError] = React.useState("");
-
-        React.useEffect(() => {
-          const loadPost = async () => {
-            try {
-              const posts = await blogPostsModule.getBlogPosts();
-              const foundPost = posts.find((p) => p.id === postId);
-
-              if (foundPost) {
-                setPost(foundPost);
-                // Update URL
-                window.history.pushState(
-                  { id: foundPost.id },
-                  "",
-                  `/blogs/${foundPost.id}/${foundPost.slug}`
-                );
-                // Increment view count
-                incrementViewCount(foundPost.id);
-              } else {
-                setError(`Blog post with ID ${postId} not found.`);
-              }
-            } catch (err) {
-              console.error("Error loading blog post:", err);
-              setError("Error loading blog post.");
-            } finally {
-              setLoading(false);
-            }
-          };
-
-          loadPost();
-        }, []);
-
-        if (loading) {
-          return <div>Loading blog post...</div>;
-        }
-
-        if (error) {
-          return <div>{error}</div>;
-        }
-
-        return post ? <BlogPostView post={post} /> : null;
-      };
-
-      return <AsyncBlogPostById />;
     },
   },
 

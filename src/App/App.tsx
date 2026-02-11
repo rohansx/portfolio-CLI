@@ -3,7 +3,6 @@ import styles from './AppClean.module.scss';
 import InputManagerNew from '../InputManager/InputManagerNew';
 import { useApp } from '../context/AppContext';
 import { parseCommandChain, grepFilter } from '../utils/commandParser';
-import { github_username } from '../config';
 import { trackPageView } from '../analytics';
 import SEO from '../components/SEO';
 import BlogPage from '../components/BlogPage';
@@ -154,7 +153,9 @@ const App: React.FC = () => {
           commands,
           record,
           blogPosts,
+          projectData,
           projectDataLoaded: true,
+          userData,
           userDataLoaded: true,
         },
         setState: (newState: any) => {
@@ -410,7 +411,7 @@ const App: React.FC = () => {
           {record.map(({ command, output }, index) => (
             <div key={index} className={styles.commandOutput}>
               <span className={styles.promptPrefix}>
-                <span>{github_username}</span>@<span>sh:</span>
+                <span>rohan</span>@<span>sh:</span>
                 ~${' '}
                 <span
                   className={

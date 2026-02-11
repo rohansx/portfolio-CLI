@@ -27,7 +27,7 @@ class InputManager extends Component<
     return (
       <div className={styles.inputWrapper}>
         <span className={styles.promptPrefix}>
-          <span>{github_username}</span>@<span>sh:</span>
+          <span>rohan</span>@<span>sh:</span>
           ~$&nbsp;
         </span>
         <form
