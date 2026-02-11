@@ -1,0 +1,200 @@
+// Resume content as markdown string
+export const resumeMarkdown = `# ROHAN SHARMA
+
+[+91 8552866471](tel:+918552866471) | [hello@rohan.sh](mailto:hello@rohan.sh) | [rohan.sh](https://rohan.sh) | [LinkedIn](https://linkedin.com/in/rohansx) | [GitHub](https://github.com/rohansx) | [Twitter](https://x.com/rohansxd)
+
+---
+
+## Education
+
+**University of Mumbai** | Aug 2019 - Jun 2023
+*Bachelor of Engineering in Computer Science* | Mumbai, India
+
+---
+
+## Experience
+
+**[MyClone](https://myclone.is)** | Aug 2024 - Present
+*Founding Full Stack Engineer* | San Francisco, CA (Remote)
+
+- Develop AI-driven tools for experts and coaches
+- Built the core platform using Go, Python, TypeScript, AWS, Postgres, and React for high-fidelity interactions
+- Developed rich, interactive frontend experiences using React and TypeScript, ensuring seamless user engagement
+- Created systems for memory and adaptive conversation flow, enhancing user engagement
+- Designed scalable APIs for real-time AI reasoning and integration with external tools
+
+**[Surfboard Ventures](https://surfboardventures.com)** | Sep 2023 - Jun 2024
+*Associate Software Engineer* | Mumbai, India (Hybrid)
+
+- Developed dynamic website frontend using Next.js with Tailwind CSS for responsive design
+- Implemented Headless CMS (Contentstack) for dynamic content management and distribution
+- Assisted in API development for dynamic form generation using Contentstack
+- Utilized Docker for containerization and AWS for cloud services
+
+**[OpenXYZ](https://github.com/open-xyz)** | Apr 2023 - Mar 2024
+*Community Manager* | Remote
+
+- Built and grew a vibrant community focused on open-source contributions
+- Mentored junior developers in understanding open-source and guiding early contributions
+- Organized workshops and seminars to encourage active participation
+
+**[GSSOC'23 - Girlscript Summer of Code](https://gssoc.girlscript.tech/)** | May 2023 - Jul 2023
+*Project Administrator* | Remote
+
+- Led [Informatician](https://github.com/open-xyz/informatician) project, managing tasks, code quality, and 100+ contributors
+
+---
+
+## Projects
+
+**[VibeGuard](https://vibeguard.io)** | *Python, Go, AI* | Feb 2026
+
+- AI code compliance scanner — a pre-commit security tool with LLM integration to detect vulnerabilities before they enter your codebase
+
+**[xmail.sh](https://xmail.sh)** | *TypeScript, AI* | 2025
+
+- AI-powered email platform for AI agents with intent classification, sentiment analysis, and human-in-the-loop approval
+
+**[Moltnet](https://moltnet.ai)** | *HTML, TypeScript, AI* | Jan 2026
+
+- GitHub for AI Agents — collaborative platform where AI agents create projects, propose changes, and build software together
+
+**[Reflection](https://reflection.buildrappo.com)** | *Next.js, TypeScript, AI* | Dec 2024
+
+- A tool that turns your LinkedIn profile into a personalized, shareable year-end story
+
+**[Rappo](https://buildrappo.com)** | *React, TypeScript, Node.js* | 2024
+
+- Networking platform connecting engineering champions with early-stage founders for mentorship and advisory
+
+**[Doctalyzer](https://doctalyzer.rohan.sh/)** | *React, Redux, OpenAI, GCP* | Nov 2023
+
+- Built app simplifying medical reports using Google Vision OCR and OpenAI GPT-3.5 Turbo
+
+---
+
+## Technical Skills
+
+**Languages & Frameworks:** Go, Python, JavaScript, TypeScript, React, Next.js, Node.js, Express
+**Database:** PostgreSQL, MongoDB, MySQL
+**Tools:** Docker, AWS, GCP, Git, GraphQL, REST API, Linux, Figma
+
+---
+
+## Achievements
+
+- **Top 10** in SaaS-Professional Track at Mumbai Hacks 2024 (Guinness World Records largest GenAI hackathon, 1500+ participants)
+- **Top 10** at Disrupt'23, IIT Guwahati's E-Summit (900+ teams)
+- **Top 10** at Startup Quest 2023 (400+ teams)
+`;
+
+// Structured data for GUI
+export const profileData = {
+  name: 'Rohan Sharma',
+  title: 'Founding Full Stack Engineer @ MyClone',
+  bio: 'Building the future, one line of code at a time. I specialize in building efficient, secure, & scalable apps with Go & TypeScript, leveraging AI to enhance functionality & UX.',
+  contact: {
+    phone: '+91 8552866471',
+    email: 'hello@rohan.sh',
+    website: 'https://rohan.sh',
+    linkedin: 'https://linkedin.com/in/rohansx',
+    github: 'https://github.com/rohansx',
+    twitter: 'https://x.com/rohansxd',
+  },
+  experience: [
+    {
+      company: 'MyClone',
+      url: 'https://myclone.is',
+      role: 'Founding Full Stack Engineer',
+      period: 'Aug 2024 - Present',
+      location: 'San Francisco, CA (Remote)',
+      highlights: [
+        'Develop AI-driven tools for experts and coaches',
+        'Built core platform using Go, Python, TypeScript, AWS, Postgres, and React',
+        'Developed rich, interactive frontend experiences using React and TypeScript',
+        'Created systems for memory and adaptive conversation flow',
+        'Designed scalable APIs for real-time AI reasoning',
+      ],
+    },
+    {
+      company: 'Surfboard Ventures',
+      url: 'https://surfboardventures.com',
+      role: 'Associate Software Engineer',
+      period: 'Sep 2023 - Jun 2024',
+      location: 'Mumbai, India',
+      highlights: [
+        'Dynamic frontend using Next.js with Tailwind CSS',
+        'Headless CMS (Contentstack) for content management',
+        'Docker containerization and AWS cloud services',
+      ],
+    },
+    {
+      company: 'OpenXYZ',
+      url: 'https://github.com/open-xyz',
+      role: 'Community Manager',
+      period: 'Apr 2023 - Mar 2024',
+      location: 'Remote',
+      highlights: [
+        'Built and grew open-source community',
+        'Mentored junior developers on contributions',
+      ],
+    },
+    {
+      company: 'GSSoC\'23',
+      url: 'https://gssoc.girlscript.tech/',
+      role: 'Project Administrator',
+      period: 'May 2023 - Jul 2023',
+      location: 'Remote',
+      highlights: ['Led Informatician project, managing 100+ contributors'],
+    },
+  ],
+  projects: [
+    {
+      name: 'VibeGuard',
+      url: 'https://vibeguard.io',
+      description: 'AI code compliance scanner — pre-commit security with LLM integration',
+      tech: ['Python', 'Go', 'AI'],
+    },
+    {
+      name: 'xmail.sh',
+      url: 'https://xmail.sh',
+      description: 'AI-powered email platform for AI agents with human-in-the-loop approval',
+      tech: ['TypeScript', 'AI'],
+    },
+    {
+      name: 'Moltnet',
+      url: 'https://moltnet.ai',
+      description: 'GitHub for AI Agents — collaborative platform where agents build together',
+      tech: ['TypeScript', 'AI'],
+    },
+    {
+      name: 'Reflection',
+      url: 'https://reflection.buildrappo.com',
+      description: 'Turns your LinkedIn profile into a personalized, shareable year-end story',
+      tech: ['Next.js', 'TypeScript', 'AI'],
+    },
+    {
+      name: 'Rappo',
+      url: 'https://buildrappo.com',
+      description: 'Networking platform connecting engineering champions with early-stage founders',
+      tech: ['React', 'TypeScript', 'Node.js'],
+    },
+    {
+      name: 'Doctalyzer',
+      url: 'https://doctalyzer.rohan.sh/',
+      description: 'Medical report simplifier using Google Vision OCR and OpenAI GPT-3.5',
+      tech: ['React', 'Redux', 'OpenAI', 'GCP'],
+    },
+  ],
+  skills: {
+    languages: ['Go', 'Python', 'JavaScript', 'TypeScript'],
+    frameworks: ['React', 'Next.js', 'Node.js', 'Express'],
+    databases: ['PostgreSQL', 'MongoDB', 'MySQL'],
+    tools: ['Docker', 'AWS', 'GCP', 'GraphQL', 'Git', 'Linux'],
+  },
+  achievements: [
+    { title: 'Top 10', event: 'Mumbai Hacks 2024 SaaS Track (Guinness World Records largest GenAI hackathon)', teams: '1500+' },
+    { title: 'Top 10', event: 'Disrupt\'23, IIT Guwahati E-Summit', teams: '900+' },
+    { title: 'Top 10', event: 'Startup Quest 2023', teams: '400+' },
+  ],
+};

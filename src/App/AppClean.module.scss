@@ -246,6 +246,43 @@
   color: var(--red) !important;
 }
 
+// Welcome message
+.welcome {
+  padding: 0 0 16px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  animation: fadeIn 0.5s ease-out;
+}
+
+.welcomeText {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.welcomeHighlight {
+  color: var(--green, #4ade80);
+  font-weight: 600;
+}
+
+.welcomeHint {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.welcomeCmd {
+  color: var(--cyan, #06b6d4);
+  background: rgba(6, 182, 212, 0.08);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+}
+
+.welcomeDot {
+  color: rgba(255, 255, 255, 0.15);
+}
+
 // Resize Handle - Invisible but functional
 .resizeHandle {
   position: absolute;
@@ -317,35 +354,45 @@
   }
 }
 
-// Blog Link - Floating, minimal
-.blogLink {
+// TUI Nav Bar
+.tuiNav {
   position: fixed;
-  top: 24px;
-  right: 24px;
-  padding: 10px 20px;
-  background: rgba(20, 20, 20, 0.8);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  color: var(--light);
-  text-decoration: none;
-  font-family: var(--font-normal);
-  font-size: 13px;
-  font-weight: 500;
-  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 6px;
   z-index: 100;
+  font-family: var(--font-code);
+  animation: fadeIn 0.5s ease-out;
+}
+
+.tuiNavItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.3);
+  text-decoration: none;
+  font-family: var(--font-code);
+  font-size: 13px;
+  cursor: pointer;
+  transition: color 0.15s ease;
+  white-space: nowrap;
 
   &:hover {
-    background: rgba(30, 30, 30, 0.9);
-    border-color: rgba(255, 255, 255, 0.2);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  }
+    color: rgba(255, 255, 255, 0.7);
 
-  &:active {
-    transform: translateY(0);
+    .tuiKey {
+      color: var(--cyan, #06b6d4);
+    }
   }
+}
+
+.tuiKey {
+  color: rgba(255, 255, 255, 0.45);
+  transition: color 0.15s ease;
 }
 
 /* Responsive - Tablet */
@@ -401,12 +448,14 @@
     display: none;
   }
 
-  .blogLink {
-    top: 12px;
-    right: 12px;
-    font-size: 11px;
-    padding: 6px 12px;
-    z-index: 1000;
+  .tuiNav {
+    top: 8px;
+    right: 8px;
+    gap: 4px;
+
+    .tuiNavItem {
+      font-size: 11px;
+    }
   }
 
   .trafficLights {
@@ -434,9 +483,12 @@
     font-size: 12px;
   }
 
-  .blogLink {
-    padding: 4px 8px;
-    font-size: 10px;
+  .tuiNav {
+    gap: 2px;
+
+    .tuiNavItem {
+      font-size: 10px;
+    }
   }
 }
 

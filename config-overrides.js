@@ -4,7 +4,7 @@ const path = require("path");
 module.exports = function override(config, env) {
   // Add support for MDX files
   config.module.rules.push({
-    test: /\.mdx?$/,
+    test: /\.mdx$/,
     use: [
       {
         loader: "babel-loader",
@@ -16,6 +16,12 @@ module.exports = function override(config, env) {
         loader: "@mdx-js/loader",
       },
     ],
+  });
+
+  // Add support for MD files as raw text
+  config.module.rules.push({
+    test: /\.md$/,
+    type: "asset/source",
   });
 
   // Add .mdx extension to the resolved extensions

@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import { github_username } from "../config";
 import LoadingSkeleton from "../components/LoadingSkeleton";
 import ErrorBoundary from "../components/ErrorBoundary";
+import { profileData } from "../data/resume";
 import {
   CowsayCommand,
   MatrixCommand,
@@ -490,6 +491,45 @@ const rawCommands: Command[] = [
     execute(app) {
       const { ThemeCommand } = require('../components/ThemeSwitcher');
       return <ErrorBoundary><ThemeCommand /></ErrorBoundary>;
+    },
+  },
+
+  {
+    name: "experience",
+    icon: "fas fa-fw fa-briefcase",
+    description: "View my work experience",
+    execute() {
+      return (
+        <div className={styles.experienceWrapper}>
+          {profileData.experience.map((exp, i) => (
+            <div key={i} className={styles.experienceItem}>
+              <div>
+                <a href={exp.url} target="_blank" rel="noopener noreferrer" className={styles.expCompany}>
+                  {exp.company}
+                </a>
+                <span className={styles.expRole}> — {exp.role}</span>
+              </div>
+              <div className={styles.expMeta}>{exp.period} · {exp.location}</div>
+              <ul className={styles.expHighlights}>
+                {exp.highlights.map((h, j) => (
+                  <li key={j}>{h}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      );
+    },
+  },
+
+  {
+    name: "gui",
+    icon: "fas fa-fw fa-th-large",
+    description: "Switch to GUI mode",
+    execute() {
+      // This triggers the GUI switch via a custom event
+      window.dispatchEvent(new CustomEvent('switch-to-gui'));
+      return <div style={{ color: 'var(--green)' }}>Switching to GUI mode...</div>;
     },
   },
 

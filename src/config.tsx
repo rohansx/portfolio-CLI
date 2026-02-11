@@ -38,7 +38,7 @@ const links = [
   {
     name: "Twitter",
     icon: "fab fa-fw fa-twitter",
-    link: "https://twitter.com/rohaxyz",
+    link: "https://x.com/rohansxd",
     description: "My profile on Twitter",
   },
   {

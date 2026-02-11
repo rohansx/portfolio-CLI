@@ -1,433 +1,458 @@
-// src/App.tsx
+import React, { useRef, useEffect, useState, useCallback } from 'react';
+import styles from './AppClean.module.scss';
+import InputManagerNew from '../InputManager/InputManagerNew';
+import { useApp } from '../context/AppContext';
+import { parseCommandChain, grepFilter } from '../utils/commandParser';
+import { github_username } from '../config';
+import { trackPageView } from '../analytics';
+import SEO from '../components/SEO';
+import BlogPage from '../components/BlogPage';
+import ResumePage from '../components/ResumePage';
+import ParticleBackground from '../components/ParticleBackground';
+import GuiPortfolio from '../components/GuiPortfolio';
+import { KeyboardShortcutsModal, CommandPalette } from '../components/KeyboardShortcuts';
+import { resolveAlias } from '../utils/commandAliases';
+import { useDraggable } from '../hooks/useDraggable';
+import { useResizable } from '../hooks/useResizable';
+import StatusBar from '../components/StatusBar';
 
-import React, { Component, createRef, RefObject } from "react";
-import styles from "./App.module.scss";
-import commands from "../commands/commands";
-import { projects, github_username } from "../config";
-import { AppState, BlogPost } from "../typings";
-import InputManager from "../InputManager/InputManager";
-import { trackPageView } from "../analytics"; // Import the tracking function
-import SEO from "../components/SEO";
-import blogPostsModule from "../blogs";
-import BlogPage from "../components/BlogPage";
-import GuiPortfolio from "../components/GuiPortfolio";
-import ResumePage from "../components/ResumePage";
+const App: React.FC = () => {
+  const windowRef = useRef<HTMLDivElement>(null);
+  const titleBarRef = useRef<HTMLDivElement>(null);
+  const mainRef = useRef<HTMLDivElement>(null);
 
-interface AppComponentState extends AppState {
-  showBlogPage: boolean;
-  showResumePage: boolean;
-  blogPosts: BlogPost[];
-  blogPostsLoaded: boolean;
-  windowWidth: number;
-  windowHeight: number;
-  windowX: number;
-  windowY: number;
-  isDragging: boolean;
-  isResizing: string | null; // 'n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw'
-  dragStart: { x: number; y: number; winX: number; winY: number; winW: number; winH: number };
-  viewMode: 'terminal' | 'gui';
-}
+  const [showBlogPage, setShowBlogPage] = useState(false);
+  const [showResumePage, setShowResumePage] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
+  const [showPalette, setShowPalette] = useState(false);
+  const [invalidCommandShake, setInvalidCommandShake] = useState(false);
+  const [isMaximized, setIsMaximized] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [viewMode, setViewMode] = useState<'terminal' | 'gui'>('gui');
 
-class App extends Component<{}, AppComponentState> {
-  mainRef: RefObject<any>;
-  handleExecute: (arg: string) => void;
+  const {
+    record,
+    addToRecord,
+    clearRecord,
+    commands,
+    blogPosts,
+    trackCommand,
+    settings,
+    updateSettings,
+    userData,
+    projectData,
+  } = useApp();
 
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      record: [],
-      commands: commands,
-      projectDataLoaded: false,
-      userDataLoaded: false,
-      showBlogPage: false,
-      showResumePage: false,
-      blogPosts: [],
-      blogPostsLoaded: false,
-      windowWidth: 850,
-      windowHeight: 700,
-      windowX: (window.innerWidth - 850) / 2,
-      windowY: (window.innerHeight - 700) / 2,
-      isDragging: false,
-      isResizing: null,
-      dragStart: { x: 0, y: 0, winX: 0, winY: 0, winW: 0, winH: 0 },
-      viewMode: 'gui', // Default to GUI for general visitors
-    };
+  // Draggable and resizable
+  const { position, resetPosition } = useDraggable(windowRef, titleBarRef);
+  const { size } = useResizable(windowRef);
 
-    this.mainRef = createRef();
-
-    this.handleExecute = (arg) => {
-      const { commands } = this.state;
-      const commandName = arg.trim();
-      let output;
-      if (!commandName) output = <></>;
-      else if (!commands.has(commandName))
-        output = <>rohan@sh: command not found: {commandName}</>;
-      else output = commands.get(commandName)?.execute(this);
-      if (output)
-        this.setState({
-          ...this.state,
-          record: [
-            ...this.state.record,
-            {
-              command: commandName,
-              output: output,
-            },
-          ],
-        });
-    };
-  }
-
-  async componentDidMount() {
-    // Load blog posts first
-    try {
-      const blogPosts = await blogPostsModule.getBlogPosts();
-      this.setState({
-        blogPosts,
-        blogPostsLoaded: true,
-      });
-
-      // Check if we're on a blog route or blog post route
-      this.handleBlogRoutes();
-    } catch (error) {
-      console.error("Error loading blog posts:", error);
-      this.setState({ blogPostsLoaded: true });
-    }
-
-    // Fetch project data from github
-    const promises = projects.map((project) =>
-      fetch(`https://api.github.com/repos/${project}`).then((res) => res.json())
-    );
-    const projectData = [];
-    for (const promise of promises) projectData.push(await promise);
-    const userData = await fetch(
-      `https://api.github.com/users/${github_username}`
-    ).then((res) => res.json());
-    this.setState({
-      ...this.state,
-      projectDataLoaded: true,
-      projectData: projectData,
-      userDataLoaded: true,
-      userData: userData,
-    });
-
-    // Track initial page view
-    trackPageView(window.location.pathname + window.location.search);
-  }
-
-  handleBlogRoutes = () => {
-    const { blogPosts } = this.state;
-    
-    // Check for /resume route
-    if (window.location.pathname === "/resume") {
-      this.setState({ showResumePage: true });
-      return;
-    }
-    
-    // Check if we're on a blog route
-    const isBlogRoute = window.location.pathname.startsWith("/blogs");
-    if (isBlogRoute) {
-      this.setState({ showBlogPage: true });
-    } else {
-      // Check if we're on a blog post route
-      const match = window.location.pathname.match(
-        /\/blogs\/(\d+)\/([a-z0-9-]+)/
-      );
-      if (match) {
-        const [, postId, slug] = match;
-        const post = blogPosts.find(
-          (post) => post.id === postId && post.slug === slug
-        );
-        if (post) {
-          this.handleExecute("blog");
-        }
-      }
-    }
-  };
-
-  handleResumeNavigate = () => {
-    this.setState({ showResumePage: true });
-    window.history.pushState({}, "", "/resume");
-    trackPageView("/resume");
-  };
-
-  handleCloseResume = () => {
-    this.setState({ showResumePage: false });
-    window.history.pushState({}, "", "/");
-    trackPageView("/");
-  };
-
-  componentDidUpdate(_: any, prevState: AppComponentState) {
-    // auto scroll
-    if (
-      prevState.record.length !== this.state.record.length &&
-      this.mainRef?.current
-    )
-      this.mainRef.current.scrollTo({
-        top: this.mainRef.current.scrollHeight,
+  // Auto-scroll to bottom when new commands are added
+  useEffect(() => {
+    if (mainRef.current) {
+      mainRef.current.scrollTo({
+        top: mainRef.current.scrollHeight,
         left: 0,
-        behavior: "smooth",
+        behavior: 'smooth',
       });
+    }
+  }, [record]);
 
-    // Track page view on update
+  // Track page views
+  useEffect(() => {
     trackPageView(window.location.pathname + window.location.search);
+  }, [showBlogPage]);
+
+  // Check for routes on mount
+  useEffect(() => {
+    const pathname = window.location.pathname;
+    if (pathname === '/resume') {
+      setShowResumePage(true);
+    } else if (pathname.startsWith('/blogs')) {
+      setShowBlogPage(true);
+    }
+  }, []);
+
+  // Listen for 'gui' command event
+  useEffect(() => {
+    const handleSwitchToGui = () => setViewMode('gui');
+    window.addEventListener('switch-to-gui', handleSwitchToGui);
+    return () => window.removeEventListener('switch-to-gui', handleSwitchToGui);
+  }, []);
+
+  // Apply theme to body
+  useEffect(() => {
+    document.body.className = `theme-${settings.theme}`;
+  }, [settings.theme]);
+
+  // Global keyboard shortcuts
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      // Escape - Close modals
+      if (e.key === 'Escape') {
+        if (showHelp) setShowHelp(false);
+        if (showPalette) setShowPalette(false);
+        if (isMinimized) setIsMinimized(false);
+      }
+
+      // F11 - Fullscreen
+      if (e.key === 'F11') {
+        e.preventDefault();
+        handleMaximize();
+      }
+    };
+
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, [showHelp, showPalette, isMinimized]);
+
+  const executeCommand = useCallback(
+    (commandName: string): React.ReactNode => {
+      const trimmedCommand = commandName.trim();
+
+      if (!trimmedCommand) {
+        return <></>;
+      }
+
+      // Resolve alias
+      const resolved = resolveAlias(trimmedCommand);
+
+      // Handle theme command
+      if (resolved.startsWith('theme ')) {
+        const themeName = resolved.split(' ')[1];
+        updateSettings({ theme: themeName as any });
+        return <div style={{ color: 'var(--green)' }}>✓ Theme changed to: {themeName}</div>;
+      }
+
+      if (!commands.has(resolved)) {
+        // Trigger shake animation for invalid command
+        setInvalidCommandShake(true);
+        setTimeout(() => setInvalidCommandShake(false), 500);
+
+        return (
+          <>
+            rohan@sh: command not found: {trimmedCommand}
+            {trimmedCommand !== resolved && (
+              <span style={{ color: 'var(--muted)' }}>
+                {' '}(tried alias: {resolved})
+              </span>
+            )}
+          </>
+        );
+      }
+
+      // Track command usage
+      trackCommand(resolved);
+
+      // Execute command
+      const command = commands.get(resolved);
+      if (!command) return null;
+
+      // Create a fake app object for compatibility
+      const fakeApp = {
+        state: {
+          commands,
+          record,
+          blogPosts,
+          projectDataLoaded: true,
+          userDataLoaded: true,
+        },
+        setState: (newState: any) => {
+          if (newState.record !== undefined && newState.record.length === 0) {
+            clearRecord();
+          }
+        },
+      };
+
+      return command.execute(fakeApp as any);
+    },
+    [commands, record, blogPosts, trackCommand, clearRecord, updateSettings]
+  );
+
+  const handleExecute = useCallback(
+    (input: string) => {
+      const parsedCommands = parseCommandChain(input);
+
+      parsedCommands.forEach(({ command, args, operator }) => {
+        const fullCommand = [command, ...args].join(' ');
+        let output = executeCommand(fullCommand);
+
+        // Handle grep pipe
+        if (operator === '|' && args[0] === 'grep' && args[1]) {
+          const pattern = args[1];
+          if (output) {
+            const textContent = extractTextFromJSX(output);
+            const filtered = grepFilter(textContent, pattern);
+            output = <pre>{filtered}</pre>;
+          }
+        }
+
+        if (output !== null) {
+          addToRecord(fullCommand, output);
+        }
+      });
+    },
+    [executeCommand, addToRecord]
+  );
+
+  const extractTextFromJSX = (element: any): string => {
+    if (typeof element === 'string') return element;
+    if (element?.props?.children) {
+      if (Array.isArray(element.props.children)) {
+        return element.props.children.map(extractTextFromJSX).join('');
+      }
+      return extractTextFromJSX(element.props.children);
+    }
+    return '';
+  };
+
+  const handleMinimize = () => {
+    setIsMinimized(true);
+  };
+
+  const handleMaximize = () => {
+    setIsMaximized(prev => {
+      const newMax = !prev;
+      if (newMax) {
+        resetPosition();
+      }
+      return newMax;
+    });
+  };
+
+  const handleBlogNavigate = () => {
+    setShowBlogPage(true);
+    window.history.pushState({}, '', '/blogs');
+    trackPageView('/blogs');
+  };
+
+  const handleCloseBlog = () => {
+    setShowBlogPage(false);
+    window.history.pushState({}, '', '/');
+    trackPageView('/');
+  };
+
+  const handleCloseResume = () => {
+    setShowResumePage(false);
+    window.history.pushState({}, '', '/');
+    trackPageView('/');
+  };
+
+  const handleResumeNavigate = () => {
+    setShowResumePage(true);
+    window.history.pushState({}, '', '/resume');
+    trackPageView('/resume');
+  };
+
+  const handleModeToggle = () => {
+    setViewMode(prev => prev === 'terminal' ? 'gui' : 'terminal');
+  };
+
+  // SEO metadata
+  const title = 'Rohan Sharma - Full Stack Developer';
+  const description =
+    "Rohan Sharma's portfolio. A full stack developer specializing in JavaScript and Node.js.";
+
+  const match = window.location.pathname.match(/\/blogs\/(\d+)\/([a-z0-9-]+)/);
+  let blogTitle = title;
+  let blogDescription = description;
+
+  if (match) {
+    const [, postId] = match;
+    const post = blogPosts.find((post) => post.id === postId);
+    if (post) {
+      blogTitle = `${post.title} | ${title}`;
+      blogDescription = post.summary;
+    }
   }
 
-  handleBlogNavigate = () => {
-    this.setState({ showBlogPage: true });
-    window.history.pushState({}, "", "/blogs");
-    trackPageView("/blogs");
-  };
+  if (showResumePage) {
+    return <ResumePage onClose={handleCloseResume} />;
+  }
 
-  handleCloseBlog = () => {
-    this.setState({ showBlogPage: false });
-    window.history.pushState({}, "", "/");
-    trackPageView("/");
-  };
+  if (showBlogPage) {
+    return <BlogPage onClose={handleCloseBlog} />;
+  }
 
-  // Smooth drag handler using requestAnimationFrame
-  rafId: number = 0;
-  pendingUpdate: { x?: number; y?: number; w?: number; h?: number } | null = null;
-
-  applyUpdate = () => {
-    if (this.pendingUpdate) {
-      const { x, y, w, h } = this.pendingUpdate;
-      this.setState(prev => ({
-        ...(x !== undefined && { windowX: x }),
-        ...(y !== undefined && { windowY: y }),
-        ...(w !== undefined && { windowWidth: w }),
-        ...(h !== undefined && { windowHeight: h }),
-      } as any));
-      this.pendingUpdate = null;
-    }
-  };
-
-  handleDragStart = (e: React.MouseEvent) => {
-    if ((e.target as HTMLElement).closest(`.${styles.dotHolder}`)) return;
-    e.preventDefault();
-    
-    const { windowX, windowY, windowWidth, windowHeight } = this.state;
-    this.setState({
-      isDragging: true,
-      dragStart: { x: e.clientX, y: e.clientY, winX: windowX, winY: windowY, winW: windowWidth, winH: windowHeight },
-    });
-    document.addEventListener('mousemove', this.handleMouseMove);
-    document.addEventListener('mouseup', this.handleMouseUp);
-  };
-
-  handleResizeStart = (edge: string) => (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    const { windowX, windowY, windowWidth, windowHeight } = this.state;
-    this.setState({
-      isResizing: edge,
-      dragStart: { x: e.clientX, y: e.clientY, winX: windowX, winY: windowY, winW: windowWidth, winH: windowHeight },
-    });
-    document.addEventListener('mousemove', this.handleMouseMove);
-    document.addEventListener('mouseup', this.handleMouseUp);
-  };
-
-  handleMouseMove = (e: MouseEvent) => {
-    const { isDragging, isResizing, dragStart } = this.state;
-    const dx = e.clientX - dragStart.x;
-    const dy = e.clientY - dragStart.y;
-    const minW = 500, minH = 400;
-
-    if (isDragging) {
-      const newX = Math.max(0, Math.min(dragStart.winX + dx, window.innerWidth - dragStart.winW));
-      const newY = Math.max(0, Math.min(dragStart.winY + dy, window.innerHeight - dragStart.winH));
-      this.pendingUpdate = { x: newX, y: newY };
-    } else if (isResizing) {
-      let { winX, winY, winW, winH } = dragStart;
-      
-      if (isResizing.includes('e')) winW = Math.max(minW, winW + dx);
-      if (isResizing.includes('w')) { winW = Math.max(minW, winW - dx); winX = dragStart.winX + dragStart.winW - winW; }
-      if (isResizing.includes('s')) winH = Math.max(minH, winH + dy);
-      if (isResizing.includes('n')) { winH = Math.max(minH, winH - dy); winY = dragStart.winY + dragStart.winH - winH; }
-      
-      this.pendingUpdate = { x: winX, y: winY, w: winW, h: winH };
-    }
-
-    if (!this.rafId) {
-      this.rafId = requestAnimationFrame(() => {
-        this.applyUpdate();
-        this.rafId = 0;
-      });
-    }
-  };
-
-  handleMouseUp = () => {
-    this.setState({ isDragging: false, isResizing: null });
-    document.removeEventListener('mousemove', this.handleMouseMove);
-    document.removeEventListener('mouseup', this.handleMouseUp);
-    if (this.rafId) {
-      cancelAnimationFrame(this.rafId);
-      this.rafId = 0;
-    }
-  };
-
-  handleDoubleClickTitle = () => {
-    this.setState({
-      windowX: (window.innerWidth - this.state.windowWidth) / 2,
-      windowY: (window.innerHeight - this.state.windowHeight) / 2,
-    });
-  };
-
-  handleSwitchToGui = () => {
-    this.setState({ viewMode: 'gui' });
-  };
-
-  handleSwitchToTerminal = () => {
-    this.setState({ viewMode: 'terminal' });
-  };
-
-  render() {
-    const { record, showBlogPage, blogPosts, windowWidth, windowHeight, windowX, windowY, isResizing, isDragging, viewMode, userData, projectData } = this.state;
-    
-    const windowStyle: React.CSSProperties = {
-      width: windowWidth,
-      height: windowHeight,
-      transform: `translate3d(${windowX}px, ${windowY}px, 0)`,
-      position: 'absolute',
-      left: 0,
-      top: 0,
-      margin: 0,
-      maxHeight: 'none',
-      userSelect: isResizing || isDragging ? 'none' : 'auto',
-      willChange: isDragging || isResizing ? 'transform, width, height' : 'auto',
-    };
-    const title = "Rohan Sharma - Full Stack Developer";
-    const description =
-      "Rohan Sharma's portfolio. A full stack developer specializing in JavaScript and Node.js.";
-
-    // Check if we're on a blog post route to set appropriate meta
-    const match = window.location.pathname.match(
-      /\/blogs\/(\d+)\/([a-z0-9-]+)/
-    );
-    let blogTitle = title;
-    let blogDescription = description;
-
-    if (match) {
-      const [, postId] = match;
-      const post = blogPosts.find((post) => post.id === postId);
-      if (post) {
-        blogTitle = `${post.title} | ${title}`;
-        blogDescription = post.summary;
-      }
-    }
-
-    if (showBlogPage) {
-      return <BlogPage onClose={this.handleCloseBlog} />;
-    }
-
-    if (this.state.showResumePage) {
-      return <ResumePage onClose={this.handleCloseResume} />;
-    }
-
-    // GUI Mode
-    if (viewMode === 'gui') {
-      return (
-        <>
-          <SEO
-            title={blogTitle}
-            description={blogDescription}
-            image="https://avatars.githubusercontent.com/u/33249782?s=400&u=525a383fc9930aa547c76dfc0579ed44be306c86&v=4"
-            url={window.location.href}
-          />
-          <GuiPortfolio 
-            onSwitchToTerminal={this.handleSwitchToTerminal}
-            onNavigateResume={this.handleResumeNavigate}
-            userData={userData}
-            projectData={projectData}
-          />
-        </>
-      );
-    }
-
-    // Terminal Mode
+  // GUI Mode
+  if (viewMode === 'gui') {
     return (
-      <div className={styles.wrapper}>
+      <>
         <SEO
           title={blogTitle}
           description={blogDescription}
           image="https://avatars.githubusercontent.com/u/33249782?s=400&u=525a383fc9930aa547c76dfc0579ed44be306c86&v=4"
           url={window.location.href}
         />
+        <GuiPortfolio
+          onSwitchToTerminal={() => setViewMode('terminal')}
+          onNavigateResume={handleResumeNavigate}
+          onNavigateBlog={handleBlogNavigate}
+          userData={userData}
+          projectData={projectData}
+        />
+      </>
+    );
+  }
 
-        {/* GUI toggle button */}
-        <button className={styles.guiToggle} onClick={this.handleSwitchToGui} title="Switch to GUI">
-          <i className="fas fa-th-large"></i>
-        </button>
-
-        <div className={styles.blogNav}>
-          <a
-            href="/blogs"
-            className={styles.blogCta}
-            onClick={(e) => {
-              e.preventDefault();
-              this.handleBlogNavigate();
-            }}
-          >
-            Blog
-          </a>
-        </div>
-
-        <div className={styles.gridCanvas} />
-        
-        <div 
-          className={styles.window}
-          style={windowStyle}
-        >
-          {/* Resize edges */}
-          <div className={`${styles.resizeEdge} ${styles.resizeN}`} onMouseDown={this.handleResizeStart('n')} />
-          <div className={`${styles.resizeEdge} ${styles.resizeS}`} onMouseDown={this.handleResizeStart('s')} />
-          <div className={`${styles.resizeEdge} ${styles.resizeE}`} onMouseDown={this.handleResizeStart('e')} />
-          <div className={`${styles.resizeEdge} ${styles.resizeW}`} onMouseDown={this.handleResizeStart('w')} />
-          <div className={`${styles.resizeEdge} ${styles.resizeNE}`} onMouseDown={this.handleResizeStart('ne')} />
-          <div className={`${styles.resizeEdge} ${styles.resizeNW}`} onMouseDown={this.handleResizeStart('nw')} />
-          <div className={`${styles.resizeEdge} ${styles.resizeSE}`} onMouseDown={this.handleResizeStart('se')} />
-          <div className={`${styles.resizeEdge} ${styles.resizeSW}`} onMouseDown={this.handleResizeStart('sw')} />
-          
-          <div 
-            className={styles.titleBar}
-            onMouseDown={this.handleDragStart}
-            onDoubleClick={this.handleDoubleClickTitle}
-            style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
-          >
-            <div className={styles.dotHolder}>
-              <div className={styles.dot}></div>
-              <div className={styles.dot}></div>
-              <div className={styles.dot}></div>
-            </div>
-            <div className={styles.titleHeader}>
-              <i className="fa-fw fas fa-code"></i> rohan@sh:~
-            </div>
-          </div>
-          <div ref={this.mainRef} className={styles.mainContent}>
-            {record.map(({ command, output }, index) => (
-              <div key={index}>
-                <span className={styles.promptPrefix}>
-                  <span>{github_username}</span>@<span>sh:</span>
-                  ~${" "}
-                  <span
-                    className={
-                      commands.has(command)
-                        ? styles.validCommand
-                        : styles.invalidCommand
-                    }
-                  >
-                    {command}
-                  </span>
-                </span>
-                <div>{output}</div>
-              </div>
-            ))}
-            <InputManager handleExecute={this.handleExecute} />
-          </div>
+  if (isMinimized) {
+    return (
+      <div className={styles.wrapper}>
+        <div className={styles.minimizedBar} onClick={() => setIsMinimized(false)}>
+          <i className="fa-fw fas fa-terminal"></i>
+          <span>Terminal</span>
         </div>
       </div>
     );
   }
-}
+
+  const windowStyle: React.CSSProperties = isMaximized
+    ? {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        maxHeight: '100vh',
+        margin: 0,
+        borderRadius: 0,
+      }
+    : {
+        transform: `translate(${position.x}px, ${position.y}px)`,
+        width: `${size.width}px`,
+        height: `${size.height}px`,
+      };
+
+  return (
+    <div className={styles.wrapper}>
+      <ParticleBackground variant="connections" />
+      <SEO
+        title={blogTitle}
+        description={blogDescription}
+        image="https://avatars.githubusercontent.com/u/33249782?s=400&u=525a383fc9930aa547c76dfc0579ed44be306c86&v=4"
+        url={window.location.href}
+      />
+
+      {/* TUI Nav Bar */}
+      <nav className={styles.tuiNav}>
+        <button className={styles.tuiNavItem} onClick={handleModeToggle}>
+          [<span className={styles.tuiKey}>1</span> gui]
+        </button>
+        <a
+          href="/blogs"
+          className={styles.tuiNavItem}
+          onClick={(e) => { e.preventDefault(); handleBlogNavigate(); }}
+        >
+          [<span className={styles.tuiKey}>2</span> blog]
+        </a>
+        <a
+          href="/resume"
+          className={styles.tuiNavItem}
+          onClick={(e) => { e.preventDefault(); handleResumeNavigate(); }}
+        >
+          [<span className={styles.tuiKey}>3</span> resume]
+        </a>
+      </nav>
+
+      {/* Terminal Window */}
+      <div
+        ref={windowRef}
+        className={`${styles.window} ${invalidCommandShake ? styles.shake : ''} ${
+          settings.theme === 'retro' || settings.theme === 'matrix' ? 'crt-effect' : ''
+        }`}
+        style={windowStyle}
+      >
+        {/* Scanline effect */}
+        {(settings.theme === 'retro' || settings.theme === 'matrix') && (
+          <div className="scanline"></div>
+        )}
+
+        {/* Title Bar - Clean */}
+        <div ref={titleBarRef} className={styles.titleBar}>
+          {/* Traffic Lights - macOS style */}
+          <div className={styles.trafficLights}>
+            <button
+              className={`${styles.light} ${styles.red}`}
+              onClick={handleMinimize}
+              aria-label="Minimize"
+            />
+            <button
+              className={`${styles.light} ${styles.yellow}`}
+              onClick={handleMaximize}
+              aria-label={isMaximized ? 'Restore' : 'Maximize'}
+            />
+            <button className={`${styles.light} ${styles.green}`} aria-label="Close" />
+          </div>
+
+          {/* Title - Centered */}
+          <div className={styles.titleText}>
+            rohan@sh:~
+          </div>
+        </div>
+
+        <div ref={mainRef} className={styles.mainContent}>
+          {/* Welcome message - shown when terminal is empty */}
+          {record.length === 0 && (
+            <div className={styles.welcome}>
+              <div className={styles.welcomeText}>
+                Welcome to <span className={styles.welcomeHighlight}>rohan@sh</span>
+              </div>
+              <div className={styles.welcomeHint}>
+                Type <span className={styles.welcomeCmd}>ls</span> to see commands
+                {' '}<span className={styles.welcomeDot}>·</span>{' '}
+                Type <span className={styles.welcomeCmd}>gui</span> for GUI mode
+                {' '}<span className={styles.welcomeDot}>·</span>{' '}
+                Type <span className={styles.welcomeCmd}>experience</span> to see work history
+              </div>
+            </div>
+          )}
+
+          {record.map(({ command, output }, index) => (
+            <div key={index} className={styles.commandOutput}>
+              <span className={styles.promptPrefix}>
+                <span>{github_username}</span>@<span>sh:</span>
+                ~${' '}
+                <span
+                  className={
+                    commands.has(command) || commands.has(resolveAlias(command))
+                      ? styles.validCommand
+                      : styles.invalidCommand
+                  }
+                >
+                  {command}
+                </span>
+              </span>
+              <div className={styles.output}>{output}</div>
+            </div>
+          ))}
+
+          <InputManagerNew
+            handleExecute={handleExecute}
+            onShowHelp={() => setShowHelp(true)}
+            onShowPalette={() => setShowPalette(true)}
+          />
+        </div>
+
+        {/* Status Bar */}
+        <StatusBar mode="cli" onModeToggle={handleModeToggle} />
+
+        {/* Resize handle - invisible but functional */}
+        {!isMaximized && (
+          <div className={`${styles.resizeHandle} resize-handle`} />
+        )}
+      </div>
+
+      {/* Modals */}
+      {showHelp && <KeyboardShortcutsModal onClose={() => setShowHelp(false)} />}
+      {showPalette && (
+        <CommandPalette
+          commands={commands}
+          onExecute={(cmd) => handleExecute(cmd)}
+          onClose={() => setShowPalette(false)}
+        />
+      )}
+    </div>
+  );
+};
 
 export default App;

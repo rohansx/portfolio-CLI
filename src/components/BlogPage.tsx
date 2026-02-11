@@ -115,7 +115,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ onClose }) => {
             <i className="fab fa-github"></i>
           </a>
           <a
-            href="https://twitter.com/rsxwtf"
+            href="https://x.com/rohansxd"
             target="_blank"
             rel="noopener noreferrer"
           >

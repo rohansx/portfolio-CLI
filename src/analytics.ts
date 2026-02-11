@@ -1,9 +1,16 @@
-import ReactGA from "react-ga";
-
-const TRACKING_ID = "G-4H1R18RWCV"; // Replace with your actual tracking ID
-ReactGA.initialize(TRACKING_ID);
+// Umami analytics - script loaded via index.html
+declare global {
+  interface Window {
+    umami?: {
+      track: (event: string, data?: Record<string, unknown>) => void;
+    };
+  }
+}
 
 export const trackPageView = (page: string) => {
-  ReactGA.set({ page });
-  ReactGA.pageview(page);
+  window.umami?.track('pageview', { url: page });
+};
+
+export const trackEvent = (event: string, data?: Record<string, unknown>) => {
+  window.umami?.track(event, data);
 };

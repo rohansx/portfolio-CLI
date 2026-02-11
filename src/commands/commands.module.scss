@@ -110,6 +110,61 @@
   }
 }
 
+// Experience command styles
+.experienceWrapper {
+  padding: 8px 0;
+}
+
+.experienceItem {
+  margin-bottom: 16px;
+  padding: 10px 12px;
+  border-left: 2px solid var(--cyan, #06b6d4);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 0 6px 6px 0;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.expCompany {
+  color: var(--green, #4ade80);
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.expRole {
+  color: var(--light, #e0e0e0);
+  font-size: 0.95em;
+}
+
+.expMeta {
+  color: var(--muted, #666);
+  font-size: 0.85em;
+  margin-top: 2px;
+}
+
+.expHighlights {
+  margin: 6px 0 0;
+  padding-left: 16px;
+  list-style: none;
+
+  li {
+    color: var(--muted, #999);
+    font-size: 0.9em;
+    line-height: 1.5;
+
+    &::before {
+      content: '▸ ';
+      color: var(--cyan, #06b6d4);
+    }
+  }
+}
+
 .catImageContainer {
   display: flex; // Enables Flexbox
   justify-content: center; // Centers horizontally
