@@ -2,10 +2,9 @@ import { BlogPost } from "../typings";
 import React from "react";
 
 // Import blog posts directly
-import advancedTypeScriptPatterns from "../blogs/2023-06-20/advanced-typescript-patterns";
-import buildingCliApplications from "../blogs/2023-07-10/building-cli-applications-nodejs";
 import vibeCodingToVulnerability from "../blogs/2024-03-25/vibe-coding-to-vulnerability";
 import unlockingBrainPotentialLucyCognitiveEnhancement from "../blogs/2025-08-16/unlocking-brain-potential-lucy-cognitive-enhancement";
+import gitWorktreeNightmare from "../blogs/2026-02-28/git-worktree-nightmare-made-me-build-workz";
 
 // Define MDX post type with component
 interface MDXPostData extends Omit<BlogPost, "content"> {
@@ -15,18 +14,11 @@ interface MDXPostData extends Omit<BlogPost, "content"> {
 // Map for frontmatter data with proper typing
 const MDX_FRONTMATTER: Record<string, MDXPostData> = {};
 
-// Fix the typo in the Building CLI Applications title
-const fixedBuildingCliApplications = {
-  ...buildingCliApplications,
-  title: "Building CLI Applications with Node.js",
-};
-
 // Blog posts collection - dynamically imported
 const BLOG_POSTS: BlogPost[] = [
+  gitWorktreeNightmare,
   unlockingBrainPotentialLucyCognitiveEnhancement,
   vibeCodingToVulnerability,
-  advancedTypeScriptPatterns,
-  fixedBuildingCliApplications,
 ];
 
 // Re-export from viewCountService for backward compatibility
