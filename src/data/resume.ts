@@ -17,11 +17,11 @@ export const resumeMarkdown = `# ROHAN SHARMA
 **[MyClone](https://myclone.is)** | Aug 2024 - Present
 *Founding Full Stack Engineer* | San Francisco, CA (Remote)
 
-- Develop AI-driven tools for experts and coaches
-- Built the core platform using Go, Python, TypeScript, AWS, Postgres, and React for high-fidelity interactions
-- Developed rich, interactive frontend experiences using React and TypeScript, ensuring seamless user engagement
-- Created systems for memory and adaptive conversation flow, enhancing user engagement
-- Designed scalable APIs for real-time AI reasoning and integration with external tools
+- Built real-time voice agents using LiveKit, ElevenLabs, and Cartesia for low-latency, human-like AI clone interactions
+- Developed RAG pipelines with LangChain and LlamaIndex to ground AI clones in expert knowledge bases, documents, and coaching content
+- Engineered the core platform using Go, Python, TypeScript, AWS, Postgres, and React for high-fidelity voice and chat experiences
+- Created memory and adaptive conversation systems enabling persistent, context-aware multi-turn dialogues
+- Designed scalable APIs for real-time AI reasoning, voice synthesis, and integration with external tools
 
 **[Surfboard Ventures](https://surfboardventures.com)** | Sep 2023 - Jun 2024
 *Associate Software Engineer* | Mumbai, India (Hybrid)
@@ -47,13 +47,13 @@ export const resumeMarkdown = `# ROHAN SHARMA
 
 ## Projects
 
+**[workz](https://github.com/rohansx/workz)** | *Rust, CLI* | Feb 2026
+
+- Zoxide-like CLI for git worktrees — auto-symlinks node_modules/target/.venv, copies .env files, and smart-detects project type for zero-config multi-branch workflows
+
 **[VibeGuard](https://vibeguard.io)** | *Python, Go, AI* | Feb 2026
 
 - AI code compliance scanner — a pre-commit security tool with LLM integration to detect vulnerabilities before they enter your codebase
-
-**[xmail.sh](https://xmail.sh)** | *TypeScript, AI* | 2025
-
-- AI-powered email platform for AI agents with intent classification, sentiment analysis, and human-in-the-loop approval
 
 **[Moltnet](https://moltnet.ai)** | *HTML, TypeScript, AI* | Jan 2026
 
@@ -76,6 +76,7 @@ export const resumeMarkdown = `# ROHAN SHARMA
 ## Technical Skills
 
 **Languages & Frameworks:** Go, Python, JavaScript, TypeScript, React, Next.js, Node.js, Express
+**AI & Voice:** RAG, LangChain, LlamaIndex, OpenAI, Voice Agents
 **Database:** PostgreSQL, MongoDB, MySQL
 **Tools:** Docker, AWS, GCP, Git, GraphQL, REST API, Linux, Figma
 
@@ -92,7 +93,7 @@ export const resumeMarkdown = `# ROHAN SHARMA
 export const profileData = {
   name: 'Rohan Sharma',
   title: 'Founding Full Stack Engineer @ MyClone',
-  bio: 'Building the future, one line of code at a time. I specialize in building efficient, secure, & scalable apps with Go & TypeScript, leveraging AI to enhance functionality & UX.',
+  bio: 'Building the future, one line of code at a time. I specialize in voice AI, RAG systems, and scalable full-stack apps with Go & TypeScript.',
   contact: {
     phone: '+91 8552866471',
     email: 'hello@rohan.sh',
@@ -109,11 +110,11 @@ export const profileData = {
       period: 'Aug 2024 - Present',
       location: 'San Francisco, CA (Remote)',
       highlights: [
-        'Develop AI-driven tools for experts and coaches',
-        'Built core platform using Go, Python, TypeScript, AWS, Postgres, and React',
-        'Developed rich, interactive frontend experiences using React and TypeScript',
-        'Created systems for memory and adaptive conversation flow',
-        'Designed scalable APIs for real-time AI reasoning',
+        'Built real-time voice agents using LiveKit, ElevenLabs, and Cartesia for low-latency AI clone interactions',
+        'Developed RAG pipelines with LangChain and LlamaIndex to ground clones in expert knowledge',
+        'Engineered core platform using Go, Python, TypeScript, AWS, Postgres, and React',
+        'Created memory and adaptive conversation systems for persistent multi-turn dialogues',
+        'Designed scalable APIs for real-time AI reasoning and voice synthesis',
       ],
     },
     {
@@ -150,18 +151,18 @@ export const profileData = {
   ],
   projects: [
     {
+      name: 'workz',
+      url: 'https://github.com/rohansx/workz',
+      description: 'Zoxide-like CLI for git worktrees — auto-symlinks deps, copies .env files, zero-config multi-branch workflows',
+      tech: ['Rust', 'CLI'],
+    },
+    {
       name: 'VibeGuard',
       url: 'https://vibeguard.io',
       description: 'AI code compliance scanner — pre-commit security with LLM integration',
       tech: ['Python', 'Go', 'AI'],
     },
-    {
-      name: 'xmail.sh',
-      url: 'https://xmail.sh',
-      description: 'AI-powered email platform for AI agents with human-in-the-loop approval',
-      tech: ['TypeScript', 'AI'],
-    },
-    {
+{
       name: 'Moltnet',
       url: 'https://moltnet.ai',
       description: 'GitHub for AI Agents — collaborative platform where agents build together',
@@ -189,6 +190,7 @@ export const profileData = {
   skills: {
     languages: ['Go', 'Python', 'JavaScript', 'TypeScript'],
     frameworks: ['React', 'Next.js', 'Node.js', 'Express'],
+    'ai & voice': ['RAG', 'LangChain', 'LlamaIndex', 'OpenAI', 'Voice Agents'],
     databases: ['PostgreSQL', 'MongoDB', 'MySQL'],
     tools: ['Docker', 'AWS', 'GCP', 'GraphQL', 'Git', 'Linux'],
   },

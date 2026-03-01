@@ -5,9 +5,9 @@ import styles from "../App/App.module.scss";
 import MarkdownRenderer from "./MarkdownRenderer";
 import SEO from "./SEO";
 import {
-  getViewCountSync,
-  incrementViewCountSync,
-} from "../utils/supabaseViewCount";
+  getAllBlogViewCounts,
+  incrementBlogViewCount,
+} from "../utils/portfolioApi";
 import { MDXProvider } from "@mdx-js/react";
 import Tweet from "./Tweet";
 
@@ -35,11 +35,8 @@ const BlogPage: React.FC<BlogPageProps> = ({ onClose }) => {
         const posts = await blogPostsModule.getBlogPosts();
         setBlogPosts(posts);
 
-        // Load view counts
-        const counts: Record<string, number> = {};
-        posts.forEach((post) => {
-          counts[post.id] = getViewCount(post.id);
-        });
+        // Load all view counts in one request
+        const counts = await getAllBlogViewCounts();
         setViewCounts(counts);
 
         // Check if there's a post ID in the URL
@@ -52,7 +49,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ onClose }) => {
           if (post) {
             setSelectedPost(post);
             // Increment view count
-            const newCount = incrementViewCount(post.id);
+            const newCount = await incrementBlogViewCount(post.id);
             setViewCounts((prev) => ({ ...prev, [post.id]: newCount }));
           }
         }
@@ -75,8 +72,9 @@ const BlogPage: React.FC<BlogPageProps> = ({ onClose }) => {
     );
 
     // Increment view count
-    const newCount = incrementViewCount(post.id);
-    setViewCounts((prev) => ({ ...prev, [post.id]: newCount }));
+    incrementBlogViewCount(post.id).then((newCount) => {
+      setViewCounts((prev) => ({ ...prev, [post.id]: newCount }));
+    });
   };
 
   const handleBackClick = (e: React.MouseEvent) => {
@@ -132,15 +130,6 @@ const BlogPage: React.FC<BlogPageProps> = ({ onClose }) => {
       </div>
     );
   };
-
-  // Use synchronous versions that trigger async updates
-  function getViewCount(postId: string): number {
-    return getViewCountSync(postId);
-  }
-
-  function incrementViewCount(postId: string): number {
-    return incrementViewCountSync(postId);
-  }
 
   if (loading) {
     return (

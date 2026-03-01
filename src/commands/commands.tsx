@@ -7,7 +7,7 @@ import axios from "axios";
 import { BlogList, BlogPostView } from "../components/Blog";
 import blogPostsModule from "../blogs";
 import { getBlogPostBySlug } from "../utils/blogUtils";
-import { incrementViewCount } from "../utils/supabaseViewCount";
+import { incrementBlogViewCount } from "../utils/portfolioApi";
 import { useState, useEffect } from "react";
 import LoadingSkeleton from "../components/LoadingSkeleton";
 import ErrorBoundary from "../components/ErrorBoundary";
@@ -544,7 +544,7 @@ const AsyncBlogPost = ({ slug }: { slug: string }) => {
         if (foundPost) {
           setPost(foundPost);
           // Increment view count
-          incrementViewCount(foundPost.id);
+          incrementBlogViewCount(foundPost.id);
         } else {
           setError(`Blog post with slug "${slug}" not found.`);
         }

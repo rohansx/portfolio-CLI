@@ -125,6 +125,10 @@ const GuiPortfolio: React.FC<GuiPortfolioProps> = ({ onSwitchToTerminal, onNavig
               {skills.frameworks.join(', ')}
             </p>
             <p>
+              <span className={styles.skillLabel}>AI & Voice</span>
+              {skills['ai & voice'].join(', ')}
+            </p>
+            <p>
               <span className={styles.skillLabel}>Databases</span>
               {skills.databases.join(', ')}
             </p>
