@@ -12,16 +12,9 @@ const UPSTASH_TOKEN = process.env.REACT_APP_UPSTASH_REDIS_REST_TOKEN || '';
 const cache: Record<string, { value: number; timestamp: number }> = {};
 const CACHE_DURATION = 30000; // 30 seconds
 
-// Known blog post slugs for MGET batch retrieval
-const BLOG_SLUGS = [
-  'building-cli-applications-nodejs',
-  'advanced-typescript-patterns',
-  'vibe-coding-to-vulnerability',
-  'unlocking-brain-potential-lucy-cognitive-enhancement',
-  'git-worktree-nightmare-made-me-build-workz',
-  'enterprise-security-tools-developer-pain',
-  'leadecho-v2-from-keywords-to-intent',
-];
+// Known blog post IDs for MGET batch retrieval
+// Must match the id field in each blog post's BlogPost object
+const BLOG_IDS = ['2', '3', '4', '5', '6', '7', '8'];
 
 /**
  * Execute an Upstash Redis REST command
@@ -163,22 +156,32 @@ export async function incrementBlogViewCount(postId: string): Promise<number> {
  */
 export async function getAllBlogViewCounts(): Promise<Record<string, number>> {
   try {
-    const keys = BLOG_SLUGS.map(slug => `blog:views:${slug}`);
+    const keys = BLOG_IDS.map(id => `blog:views:${id}`);
     const results = await redisPipeline(keys.map(key => ['GET', key]));
 
     const views: Record<string, number> = {};
-    BLOG_SLUGS.forEach((slug, i) => {
+    BLOG_IDS.forEach((id, i) => {
       const count = parseInt(results[i].result as string, 10) || 0;
-      views[slug] = count;
+      views[id] = count;
 
-      const cacheKey = `blog_${slug}`;
+      const cacheKey = `blog_${id}`;
       cache[cacheKey] = { value: count, timestamp: Date.now() };
-      localStorage.setItem(`blog_views_${slug}`, count.toString());
+      localStorage.setItem(`blog_views_${id}`, count.toString());
     });
 
     return views;
   } catch (error) {
-    console.warn('Upstash unavailable');
-    return {};
+    console.warn('Upstash unavailable, using localStorage');
+
+    // Fall back to localStorage for each known post
+    const views: Record<string, number> = {};
+    BLOG_IDS.forEach(id => {
+      const stored = localStorage.getItem(`blog_views_${id}`);
+      if (stored) {
+        views[id] = parseInt(stored, 10) || 0;
+      }
+    });
+
+    return views;
   }
 }

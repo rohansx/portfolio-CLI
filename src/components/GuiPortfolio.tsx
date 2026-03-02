@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './GuiPortfolio.module.scss';
 import { profileData } from '../data/resume';
+import { incrementVisitorCount, getVisitorCount } from '../utils/portfolioApi';
 
 interface GuiPortfolioProps {
   onSwitchToTerminal: () => void;
@@ -12,9 +13,25 @@ interface GuiPortfolioProps {
 
 const GuiPortfolio: React.FC<GuiPortfolioProps> = ({ onSwitchToTerminal, onNavigateResume, onNavigateBlog }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const [visitorCount, setVisitorCount] = useState<number>(
+    parseInt(localStorage.getItem('portfolio_visitors') || '0', 10)
+  );
 
   useEffect(() => {
     setIsVisible(true);
+  }, []);
+
+  useEffect(() => {
+    const fetchCount = async () => {
+      try {
+        const count = await incrementVisitorCount();
+        setVisitorCount(count);
+      } catch {
+        const cached = localStorage.getItem('portfolio_visitors');
+        if (cached) setVisitorCount(parseInt(cached, 10));
+      }
+    };
+    fetchCount();
   }, []);
 
   const { name, title, bio, contact, experience, projects, skills, achievements } = profileData;
@@ -181,6 +198,9 @@ const GuiPortfolio: React.FC<GuiPortfolioProps> = ({ onSwitchToTerminal, onNavig
         {/* Footer */}
         <footer className={styles.footer}>
           <p>© {new Date().getFullYear()} {name}</p>
+          {visitorCount > 0 && (
+            <p className={styles.visitorCount}>{visitorCount.toLocaleString()} visitors</p>
+          )}
         </footer>
       </div>
     </div>

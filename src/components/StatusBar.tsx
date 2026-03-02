@@ -10,7 +10,9 @@ interface StatusBarProps {
 
 const StatusBar: React.FC<StatusBarProps> = ({ mode = 'cli', onModeToggle }) => {
   const [time, setTime] = useState(new Date());
-  const [visitorCount, setVisitorCount] = useState<number>(0);
+  const [visitorCount, setVisitorCount] = useState<number>(
+    parseInt(localStorage.getItem('portfolio_visitors') || '0', 10)
+  );
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const { settings } = useApp();
 
