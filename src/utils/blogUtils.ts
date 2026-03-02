@@ -23,9 +23,6 @@ const BLOG_POSTS: BlogPost[] = [
   vibeCodingToVulnerability,
 ];
 
-// Re-export from viewCountService for backward compatibility
-export { getViewCountSync, incrementViewCountSync } from "../utils/viewCountService";
-
 /**
  * Loads all blog posts (client-side implementation)
  */
