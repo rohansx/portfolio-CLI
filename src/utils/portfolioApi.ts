@@ -20,6 +20,7 @@ const BLOG_SLUGS = [
   'unlocking-brain-potential-lucy-cognitive-enhancement',
   'git-worktree-nightmare-made-me-build-workz',
   'enterprise-security-tools-developer-pain',
+  'leadecho-v2-from-keywords-to-intent',
 ];
 
 /**
