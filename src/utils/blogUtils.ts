@@ -7,6 +7,8 @@ import unlockingBrainPotentialLucyCognitiveEnhancement from "../blogs/2025-08-16
 import gitWorktreeNightmare from "../blogs/2026-02-28/git-worktree-nightmare-made-me-build-workz";
 import enterpriseSecurityPain from "../blogs/2026-03-02/enterprise-security-tools-developer-pain";
 import leadechoV2 from "../blogs/2026-03-02/leadecho-v2-from-keywords-to-intent";
+import commitmentEngine from "../blogs/2026-03-03/commitment-engine-engineering-commitments-disappear";
+import aiAgentWorktrees from "../blogs/2026-03-05/ai-agent-worktrees-none-actually-work";
 
 // Define MDX post type with component
 interface MDXPostData extends Omit<BlogPost, "content"> {
@@ -18,6 +20,8 @@ const MDX_FRONTMATTER: Record<string, MDXPostData> = {};
 
 // Blog posts collection - dynamically imported
 const BLOG_POSTS: BlogPost[] = [
+  aiAgentWorktrees,
+  commitmentEngine,
   leadechoV2,
   enterpriseSecurityPain,
   gitWorktreeNightmare,
