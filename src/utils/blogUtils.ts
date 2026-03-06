@@ -9,6 +9,7 @@ import enterpriseSecurityPain from "../blogs/2026-03-02/enterprise-security-tool
 import leadechoV2 from "../blogs/2026-03-02/leadecho-v2-from-keywords-to-intent";
 import commitmentEngine from "../blogs/2026-03-03/commitment-engine-engineering-commitments-disappear";
 import aiAgentWorktrees from "../blogs/2026-03-05/ai-agent-worktrees-none-actually-work";
+import ragPipelineLeaking from "../blogs/2026-03-05/rag-pipeline-leaking-enterprise-ai-privacy";
 
 // Define MDX post type with component
 interface MDXPostData extends Omit<BlogPost, "content"> {
@@ -20,6 +21,7 @@ const MDX_FRONTMATTER: Record<string, MDXPostData> = {};
 
 // Blog posts collection - dynamically imported
 const BLOG_POSTS: BlogPost[] = [
+  ragPipelineLeaking,
   aiAgentWorktrees,
   commitmentEngine,
   leadechoV2,
