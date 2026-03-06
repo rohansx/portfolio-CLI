@@ -67,15 +67,15 @@ export const resumeMarkdown = `# ROHAN SHARMA
 
 - Networking platform connecting engineering champions with early-stage founders for mentorship and advisory
 
-**[Doctalyzer](https://doctalyzer.rohan.sh/)** | *React, Redux, OpenAI, GCP* | Nov 2023
+**[CloakPipe](https://github.com/rohansx/cloakpipe)** | *Rust, Security, AI* | Mar 2026
 
-- Built app simplifying medical reports using Google Vision OCR and OpenAI GPT-3.5 Turbo
+- Open-source Rust privacy proxy for LLM APIs — consistent pseudonymization across RAG pipelines with AES-256-GCM encrypted vault, <5ms overhead
 
 ---
 
 ## Technical Skills
 
-**Languages & Frameworks:** Go, Python, JavaScript, TypeScript, React, Next.js, Node.js, Express
+**Languages & Frameworks:** Go, Rust, Python, JavaScript, TypeScript, React, Next.js, Node.js, Express
 **AI & Voice:** RAG, LangChain, LlamaIndex, OpenAI, Voice Agents
 **Database:** PostgreSQL, MongoDB, MySQL
 **Tools:** Docker, AWS, GCP, Git, GraphQL, REST API, Linux, Figma
@@ -181,14 +181,14 @@ export const profileData = {
       tech: ['React', 'TypeScript', 'Node.js'],
     },
     {
-      name: 'Doctalyzer',
-      url: 'https://doctalyzer.rohan.sh/',
-      description: 'Medical report simplifier using Google Vision OCR and OpenAI GPT-3.5',
-      tech: ['React', 'Redux', 'OpenAI', 'GCP'],
+      name: 'CloakPipe',
+      url: 'https://github.com/rohansx/cloakpipe',
+      description: 'Rust privacy proxy for LLM APIs — consistent pseudonymization across RAG pipelines, <5ms overhead',
+      tech: ['Rust', 'Security', 'AI'],
     },
   ],
   skills: {
-    languages: ['Go', 'Python', 'JavaScript', 'TypeScript'],
+    languages: ['Go', 'Rust', 'Python', 'JavaScript', 'TypeScript'],
     frameworks: ['React', 'Next.js', 'Node.js', 'Express'],
     'ai & voice': ['RAG', 'LangChain', 'LlamaIndex', 'OpenAI', 'Voice Agents'],
     databases: ['PostgreSQL', 'MongoDB', 'MySQL'],
