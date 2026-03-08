@@ -47,6 +47,14 @@ export const resumeMarkdown = `# ROHAN SHARMA
 
 ## Projects
 
+**[Convox](https://convox.ai)** | *Python, React, Voice AI* | Mar 2026
+
+- Open-source voice AI orchestration platform for India — build production voice agents in 22+ Indian languages with provider-agnostic pipelines, cost tracking, and DPDP compliance
+
+**[CloakPipe](https://github.com/rohansx/cloakpipe)** | *Rust, Security, AI* | Mar 2026
+
+- Open-source Rust privacy proxy for LLM APIs — consistent pseudonymization across RAG pipelines with AES-256-GCM encrypted vault, <5ms overhead
+
 **[workz](https://github.com/rohansx/workz)** | *Rust, CLI* | Feb 2026
 
 - Zoxide-like CLI for git worktrees — auto-symlinks node_modules/target/.venv, copies .env files, and smart-detects project type for zero-config multi-branch workflows
@@ -66,10 +74,6 @@ export const resumeMarkdown = `# ROHAN SHARMA
 **[Rappo](https://buildrappo.com)** | *React, TypeScript, Node.js* | 2024
 
 - Networking platform connecting engineering champions with early-stage founders for mentorship and advisory
-
-**[CloakPipe](https://github.com/rohansx/cloakpipe)** | *Rust, Security, AI* | Mar 2026
-
-- Open-source Rust privacy proxy for LLM APIs — consistent pseudonymization across RAG pipelines with AES-256-GCM encrypted vault, <5ms overhead
 
 ---
 
@@ -151,6 +155,18 @@ export const profileData = {
   ],
   projects: [
     {
+      name: 'Convox',
+      url: 'https://convox.ai',
+      description: 'Open-source voice AI orchestration for India — production voice agents in 22+ languages with provider-agnostic pipelines and DPDP compliance',
+      tech: ['Python', 'React', 'Voice AI'],
+    },
+    {
+      name: 'CloakPipe',
+      url: 'https://github.com/rohansx/cloakpipe',
+      description: 'Rust privacy proxy for LLM APIs — consistent pseudonymization across RAG pipelines, <5ms overhead',
+      tech: ['Rust', 'Security', 'AI'],
+    },
+    {
       name: 'workz',
       url: 'https://github.com/rohansx/workz',
       description: 'Zoxide-like CLI for git worktrees — auto-symlinks deps, copies .env files, zero-config multi-branch workflows',
@@ -162,7 +178,7 @@ export const profileData = {
       description: 'AI code compliance scanner — pre-commit security with LLM integration',
       tech: ['Python', 'Go', 'AI'],
     },
-{
+    {
       name: 'Moltnet',
       url: 'https://moltnet.ai',
       description: 'GitHub for AI Agents — collaborative platform where agents build together',
@@ -179,12 +195,6 @@ export const profileData = {
       url: 'https://buildrappo.com',
       description: 'Networking platform connecting engineering champions with early-stage founders',
       tech: ['React', 'TypeScript', 'Node.js'],
-    },
-    {
-      name: 'CloakPipe',
-      url: 'https://github.com/rohansx/cloakpipe',
-      description: 'Rust privacy proxy for LLM APIs — consistent pseudonymization across RAG pipelines, <5ms overhead',
-      tech: ['Rust', 'Security', 'AI'],
     },
   ],
   skills: {
