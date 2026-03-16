@@ -31,13 +31,6 @@ export const resumeMarkdown = `# ROHAN SHARMA
 - Assisted in API development for dynamic form generation using Contentstack
 - Utilized Docker for containerization and AWS for cloud services
 
-**[OpenXYZ](https://github.com/open-xyz)** | Apr 2023 - Mar 2024
-*Community Manager* | Remote
-
-- Built and grew a vibrant community focused on open-source contributions
-- Mentored junior developers in understanding open-source and guiding early contributions
-- Organized workshops and seminars to encourage active participation
-
 **[GSSOC'23 - Girlscript Summer of Code](https://gssoc.girlscript.tech/)** | May 2023 - Jul 2023
 *Project Administrator* | Remote
 
@@ -59,13 +52,9 @@ export const resumeMarkdown = `# ROHAN SHARMA
 
 - Zoxide-like CLI for git worktrees — auto-symlinks node_modules/target/.venv, copies .env files, and smart-detects project type for zero-config multi-branch workflows
 
-**[VibeGuard](https://vibeguard.io)** | *Python, Go, AI* | Feb 2026
-
-- AI code compliance scanner — a pre-commit security tool with LLM integration to detect vulnerabilities before they enter your codebase
-
 **[Moltnet](https://moltnet.ai)** | *HTML, TypeScript, AI* | Jan 2026
 
-- GitHub for AI Agents — collaborative platform where AI agents create projects, propose changes, and build software together
+- LinkedIn for AI Agents — collaborative platform where AI agents create projects, propose changes, and build software together
 
 **[Reflection](https://reflection.buildrappo.com)** | *Next.js, TypeScript, AI* | Dec 2024
 
@@ -79,7 +68,7 @@ export const resumeMarkdown = `# ROHAN SHARMA
 
 ## Technical Skills
 
-**Languages & Frameworks:** Go, Rust, Python, JavaScript, TypeScript, React, Next.js, Node.js, Express
+**Languages & Frameworks:** Go, Python, JavaScript, TypeScript, React, Next.js, Node.js, Express
 **AI & Voice:** RAG, LangChain, LlamaIndex, OpenAI, Voice Agents
 **Database:** PostgreSQL, MongoDB, MySQL
 **Tools:** Docker, AWS, GCP, Git, GraphQL, REST API, Linux, Figma
@@ -134,17 +123,6 @@ export const profileData = {
       ],
     },
     {
-      company: 'OpenXYZ',
-      url: 'https://github.com/open-xyz',
-      role: 'Community Manager',
-      period: 'Apr 2023 - Mar 2024',
-      location: 'Remote',
-      highlights: [
-        'Built and grew open-source community',
-        'Mentored junior developers on contributions',
-      ],
-    },
-    {
       company: 'GSSoC\'23',
       url: 'https://gssoc.girlscript.tech/',
       role: 'Project Administrator',
@@ -173,15 +151,9 @@ export const profileData = {
       tech: ['Rust', 'CLI'],
     },
     {
-      name: 'VibeGuard',
-      url: 'https://vibeguard.io',
-      description: 'AI code compliance scanner — pre-commit security with LLM integration',
-      tech: ['Python', 'Go', 'AI'],
-    },
-    {
       name: 'Moltnet',
       url: 'https://moltnet.ai',
-      description: 'GitHub for AI Agents — collaborative platform where agents build together',
+      description: 'LinkedIn for AI Agents — collaborative platform where agents build together',
       tech: ['TypeScript', 'AI'],
     },
     {
@@ -198,7 +170,7 @@ export const profileData = {
     },
   ],
   skills: {
-    languages: ['Go', 'Rust', 'Python', 'JavaScript', 'TypeScript'],
+    languages: ['Go', 'Python', 'JavaScript', 'TypeScript'],
     frameworks: ['React', 'Next.js', 'Node.js', 'Express'],
     'ai & voice': ['RAG', 'LangChain', 'LlamaIndex', 'OpenAI', 'Voice Agents'],
     databases: ['PostgreSQL', 'MongoDB', 'MySQL'],
