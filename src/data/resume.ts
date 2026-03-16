@@ -40,10 +40,6 @@ export const resumeMarkdown = `# ROHAN SHARMA
 
 ## Projects
 
-**[Convox](https://convox.ai)** | *Python, React, Voice AI* | Mar 2026
-
-- Open-source voice AI orchestration platform for India — build production voice agents in 22+ Indian languages with provider-agnostic pipelines, cost tracking, and DPDP compliance
-
 **[CloakPipe](https://github.com/rohansx/cloakpipe)** | *Rust, Security, AI* | Mar 2026
 
 - Open-source Rust privacy proxy for LLM APIs — consistent pseudonymization across RAG pipelines with AES-256-GCM encrypted vault, <5ms overhead
@@ -132,12 +128,12 @@ export const profileData = {
     },
   ],
   projects: [
-    {
-      name: 'Convox',
-      url: 'https://convox.ai',
-      description: 'Open-source voice AI orchestration for India — production voice agents in 22+ languages with provider-agnostic pipelines and DPDP compliance',
-      tech: ['Python', 'React', 'Voice AI'],
-    },
+    // {
+    //   name: 'Convox',
+    //   url: 'https://convox.ai',
+    //   description: 'Open-source voice AI orchestration for India — production voice agents in 22+ languages with provider-agnostic pipelines and DPDP compliance',
+    //   tech: ['Python', 'React', 'Voice AI'],
+    // },
     {
       name: 'CloakPipe',
       url: 'https://github.com/rohansx/cloakpipe',
