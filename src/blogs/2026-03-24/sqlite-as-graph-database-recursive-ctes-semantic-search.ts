@@ -32,6 +32,10 @@ That's four services for what is conceptually a simple thing: "store facts about
 
 We wanted something that ships as a single binary, works offline, and stores everything in a single file you can \`cp\` to a backup drive. SQLite was the obvious choice for storage. The question was whether it could handle graph operations.
 
+![Traditional Stack vs ctxgraph](https://mermaid.ink/img/Zmxvd2NoYXJ0IExSCiAgICBzdWJncmFwaCBUcmFkaXRpb25hbFsiVHJhZGl0aW9uYWwgU3RhY2siXQogICAgICAgIGRpcmVjdGlvbiBUQgogICAgICAgIERbIkRvY2tlciJdIC0tLSBOWyJOZW80aiJdCiAgICAgICAgT1siT3BlbkFJIEFQSSJdIC0tLSBFWFsiRXh0cmFjdGlvbiJdCiAgICAgICAgUFsiUGluZWNvbmUgLyBRZHJhbnQiXSAtLS0gRU1bIkVtYmVkZGluZ3MiXQogICAgICAgIFBZWyJQeXRob24iXSAtLS0gR0xbIkdsdWUgQ29kZSJdCiAgICBlbmQKICAgIHN1YmdyYXBoIENUWFsiY3R4Z3JhcGgiXQogICAgICAgIGRpcmVjdGlvbiBUQgogICAgICAgIEJJTlsiU2luZ2xlIFJ1c3QgQmluYXJ5Il0KICAgICAgICBCSU4gLS0tIFNRWyJTUUxpdGUgRmlsZSJdCiAgICBlbmQKICAgIFRyYWRpdGlvbmFsIC0uICJ2cyIgLi0-IENUWAogICAgc3R5bGUgVHJhZGl0aW9uYWwgZmlsbDojZmVmMmYyLHN0cm9rZTojZGMyNjI2CiAgICBzdHlsZSBDVFggZmlsbDojZjBmZGY0LHN0cm9rZTojMTZhMzRhCiAgICBzdHlsZSBCSU4gZmlsbDojMTZhMzRhLGNvbG9yOiNmZmYsc3Ryb2tlOiMxNTgwM2QKICAgIHN0eWxlIFNRIGZpbGw6IzE2YTM0YSxjb2xvcjojZmZmLHN0cm9rZTojMTU4MDNk)
+
+Four services, two network dependencies, and a Docker compose file -- or one binary and one file.
+
 ## The Bet: SQLite + Recursive CTEs = Graph Database
 
 The core insight is that a graph database is really two things: a storage format for nodes and edges, and a query engine that can walk those edges efficiently. SQLite handles the first part trivially. For the second part, recursive Common Table Expressions (CTEs) give you everything you need for multi-hop traversal.
@@ -135,6 +139,12 @@ JOIN entities ent ON ent.id = t.entity_id
 ORDER BY t.depth
 \`\`\`
 
+Here's what the traversal looks like on a small graph. Starting from "AuthService" at depth 0, the CTE walks outward one hop at a time:
+
+![Recursive CTE Traversal](https://mermaid.ink/img/Zmxvd2NoYXJ0IExSCiAgICBzdWJncmFwaCBkMFsiRGVwdGggMCJdCiAgICAgICAgQVsiQXV0aFNlcnZpY2UiXQogICAgZW5kCiAgICBzdWJncmFwaCBkMVsiRGVwdGggMSJdCiAgICAgICAgQlsiSldUIl0KICAgICAgICBDWyJSZWRpcyJdCiAgICBlbmQKICAgIHN1YmdyYXBoIGQyWyJEZXB0aCAyIl0KICAgICAgICBEWyJQb3N0Z3JlcyJdCiAgICAgICAgRVsiU2Vzc2lvblN0b3JlIl0KICAgICAgICBGWyJUb2tlbkNhY2hlIl0KICAgIGVuZAogICAgQSAtLSAidXNlcyIgLS0-IEIKICAgIEEgLS0gImRlcGVuZHNfb24iIC0tPiBDCiAgICBCIC0tICJzdG9yZWRfaW4iIC0tPiBECiAgICBDIC0tICJiYWNrcyIgLS0-IEUKICAgIEMgLS0gImJhY2tzIiAtLT4gRgogICAgc3R5bGUgQSBmaWxsOiMyNTYzZWIsY29sb3I6I2ZmZixzdHJva2U6IzFlNDBhZgogICAgc3R5bGUgQiBmaWxsOiM3YzNhZWQsY29sb3I6I2ZmZixzdHJva2U6IzViMjFiNgogICAgc3R5bGUgQyBmaWxsOiM3YzNhZWQsY29sb3I6I2ZmZixzdHJva2U6IzViMjFiNgogICAgc3R5bGUgRCBmaWxsOiMwNTk2NjksY29sb3I6I2ZmZixzdHJva2U6IzA0Nzg1NwogICAgc3R5bGUgRSBmaWxsOiMwNTk2NjksY29sb3I6I2ZmZixzdHJva2U6IzA0Nzg1NwogICAgc3R5bGUgRiBmaWxsOiMwNTk2NjksY29sb3I6I2ZmZixzdHJva2U6IzA0Nzg1Nw==)
+
+The CTE starts with "AuthService" (depth 0, blue), discovers "JWT" and "Redis" (depth 1, purple), then reaches "Postgres", "SessionStore", and "TokenCache" (depth 2, green). \`UNION\` deduplicates, so if two paths reach the same node, it appears only once.
+
 Let's break down what this does:
 
 1. **Base case**: Seed the traversal with the starting entity at depth 0.
@@ -159,7 +169,7 @@ ORDER BY recorded_at DESC
 
 The equivalent Neo4j Cypher query would be:
 
-\`\`\`
+\`\`\`cypher
 MATCH path = (start:Entity {id: $id})-[*1..3]-(neighbor)
 WHERE ALL(r IN relationships(path) WHERE r.valid_until IS NULL)
 RETURN DISTINCT neighbor, length(path) AS depth
@@ -175,6 +185,12 @@ Search is where things get interesting. We have three retrieval modes, each with
 1. **FTS5 keyword search** -- exact token matching via SQLite's built-in full-text search (BM25 ranking)
 2. **Semantic similarity** -- cosine similarity against embeddings from \`all-MiniLM-L6-v2\` (384 dimensions, runs locally via ONNX)
 3. **Graph traversal** -- walk edges from entities mentioned in the query
+
+Here's how data flows through the system, from ingestion to query:
+
+![Architecture: Ingestion and Query Pipeline](https://mermaid.ink/img/Zmxvd2NoYXJ0IFRCCiAgICBzdWJncmFwaCBJbmdlc3Rpb25bIkluZ2VzdGlvbiBQaXBlbGluZSJdCiAgICAgICAgZGlyZWN0aW9uIExSCiAgICAgICAgSU5bIlRleHQgSW5wdXQiXSAtLT4gTkVSWyJHTGlORVIgTkVSIChPTk5YKSJdCiAgICAgICAgTkVSIC0tPiBSRUxbIkhldXJpc3RpYyBSZWxhdGlvbnMiXQogICAgICAgIFJFTCAtLT4gRU1CWyJFbWJlZGRpbmcgKE1pbmlMTSkiXQogICAgICAgIEVNQiAtLT4gREJbKCJTUUxpdGUgU3RvcmFnZSIpXQogICAgZW5kCiAgICBzdWJncmFwaCBRdWVyeVsiUXVlcnkgUGlwZWxpbmUiXQogICAgICAgIGRpcmVjdGlvbiBMUgogICAgICAgIFFbIlF1ZXJ5Il0gLS0-IEZUU1siRlRTNSBLZXl3b3JkIFNlYXJjaCJdCiAgICAgICAgUSAtLT4gU0VNWyJFbWJlZGRpbmcgQ29zaW5lIFNpbWlsYXJpdHkiXQogICAgICAgIFEgLS0-IENURVsiUmVjdXJzaXZlIENURSBHcmFwaCBXYWxrIl0KICAgICAgICBGVFMgLS0-IFJSRlsiUlJGIEZ1c2lvbiJdCiAgICAgICAgU0VNIC0tPiBSUkYKICAgICAgICBDVEUgLS0-IFJSRgogICAgICAgIFJSRiAtLT4gUkVTWyJSYW5rZWQgUmVzdWx0cyJdCiAgICBlbmQKICAgIEluZ2VzdGlvbiB-fn4gUXVlcnk=)
+
+Three independent retrieval modes run in parallel, each producing a ranked list. Reciprocal Rank Fusion combines them without needing comparable scores.
 
 The problem: how do you combine ranked results from three systems with completely different scoring scales? BM25 scores, cosine similarities, and graph depth are not comparable.
 
@@ -340,6 +356,10 @@ SQLite is not a graph database. But with recursive CTEs, FTS5, embeddings stored
 The full stack -- entity extraction, relation extraction, graph storage, keyword search, semantic search, graph traversal -- runs as a single binary with no network dependencies. The database is a single file. Backup is \`cp\`. Deployment is \`cargo install\`.
 
 Sometimes the best architecture is the one with the fewest moving parts.
+
+---
+
+*[ctxgraph](https://github.com/rohansx/ctxgraph) is open-source (MIT). Star it on GitHub if this was useful. We're actively inviting [benchmark episode submissions](https://github.com/rohansx/ctxgraph/blob/main/CONTRIBUTING.md) to independently validate the extraction quality.*
 `,
   author: "Rohan Sharma",
 };
