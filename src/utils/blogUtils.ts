@@ -10,6 +10,7 @@ import leadechoV2 from "../blogs/2026-03-02/leadecho-v2-from-keywords-to-intent"
 import commitmentEngine from "../blogs/2026-03-03/commitment-engine-engineering-commitments-disappear";
 import aiAgentWorktrees from "../blogs/2026-03-05/ai-agent-worktrees-none-actually-work";
 import ragPipelineLeaking from "../blogs/2026-03-05/rag-pipeline-leaking-enterprise-ai-privacy";
+import sqliteGraphDatabase from "../blogs/2026-03-24/sqlite-as-graph-database-recursive-ctes-semantic-search";
 
 // Define MDX post type with component
 interface MDXPostData extends Omit<BlogPost, "content"> {
@@ -21,6 +22,7 @@ const MDX_FRONTMATTER: Record<string, MDXPostData> = {};
 
 // Blog posts collection - dynamically imported
 const BLOG_POSTS: BlogPost[] = [
+  sqliteGraphDatabase,
   ragPipelineLeaking,
   aiAgentWorktrees,
   commitmentEngine,

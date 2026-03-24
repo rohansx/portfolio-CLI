@@ -14,7 +14,7 @@ const CACHE_DURATION = 30000; // 30 seconds
 
 // Known blog post IDs for MGET batch retrieval
 // Must match the id field in each blog post's BlogPost object
-const BLOG_IDS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', '11'];
+const BLOG_IDS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
 
 /**
  * Execute an Upstash Redis REST command
