@@ -14,7 +14,7 @@ export const resumeMarkdown = `# ROHAN SHARMA
 
 ## Experience
 
-**[Utkrusht.ai](https://utkrusht.ai)** | Apr 2026 - Present
+**[Utkrusht AI](https://utkrusht.ai)** | Apr 2026 - Present
 *AI Builder - II* | Remote
 
 - Building an agentic task builder, a conversational interface where anyone describes a use case in plain language and gets an executable, multi-step agent task
@@ -91,7 +91,7 @@ export const resumeMarkdown = `# ROHAN SHARMA
 // Structured data for GUI
 export const profileData = {
   name: 'Rohan Sharma',
-  title: 'AI Builder - II @ Utkrusht.ai',
+  title: 'AI Builder - II @ Utkrusht AI',
   bio: 'Building the future, one line of code at a time. I specialize in agentic systems, voice AI, and RAG, plus scalable full-stack apps with Go & TypeScript.',
   contact: {
     phone: '+91 8552866471',
@@ -103,7 +103,7 @@ export const profileData = {
   },
   experience: [
     {
-      company: 'Utkrusht.ai',
+      company: 'Utkrusht AI',
       url: 'https://utkrusht.ai',
       role: 'AI Builder - II',
       period: 'Apr 2026 - Present',
