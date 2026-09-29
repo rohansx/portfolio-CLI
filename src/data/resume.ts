@@ -50,6 +50,10 @@ export const resumeMarkdown = `# ROHAN SHARMA
 
 ## Projects
 
+**[LiteTraffic](https://litetraffic.com)** | *Python, k6, Testing* | Sep 2026 | [GitHub](https://github.com/rohansx/litetraffic)
+
+- Stateful synthetic traffic that verifies business effects, not just HTTP responses: seeded k6 journeys with budgets, evidence-backed pass/fail verdicts, and baseline-vs-candidate regression gates for APIs and coding-agent harnesses
+
 **[ClipXD](https://clipxd.com)** | *Local-first, Agents, Open-core*
 
 - "Record once, agents read it": screen recorder that emits a human video and a machine-readable index in one pass, indexing transcript, on-screen text, clicks, and network calls so agents can query a recording straight from a shared link
@@ -155,6 +159,12 @@ export const profileData = {
     //   description: 'Open-source voice AI orchestration for India, production voice agents in 22+ languages with provider-agnostic pipelines and DPDP compliance',
     //   tech: ['Python', 'React', 'Voice AI'],
     // },
+    {
+      name: 'LiteTraffic',
+      url: 'https://litetraffic.com',
+      description: 'Stateful synthetic traffic that verifies business effects, not just HTTP responses: seeded k6 journeys, budgets, and evidence-backed verdicts',
+      tech: ['Python', 'k6', 'Testing'],
+    },
     {
       name: 'ClipXD',
       url: 'https://clipxd.com',
