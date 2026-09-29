@@ -21,6 +21,8 @@ export const resumeMarkdown = `# ROHAN SHARMA
 - Integrated tool and MCP calling so agents act on external systems, with guardrails and human-in-the-loop confirmation on side-effectful steps
 - Built run observability (traces, retries, failure-mode surfacing) so non-technical users can see why a task did what it did
 - Driving the migration of the platform codebase toward agentic patterns, replacing hardcoded workflows with LLM-driven planning and tool use
+- Built a live-traffic system that replays real requests from separate machines into running assessment tasks, so candidates debug against production-like load instead of static fixtures
+- Built ephemeral LLM API key provisioning on LiteLLM, issuing per-candidate keys with spend caps and 2-hour validity so RAG, tool-use, and production agent-engineering tasks run with zero key setup on the candidate's side
 
 **[MyClone](https://myclone.is)** | Aug 2024 - Mar 2026
 *Founding Full Stack Engineer* | San Francisco, CA (Remote)
@@ -107,6 +109,8 @@ export const profileData = {
         'Tool and MCP calling with guardrails and human-in-the-loop confirmation on side-effectful steps',
         'Run observability (traces, retries, failure-mode surfacing) so non-technical users can debug their tasks',
         'Driving the platform codebase toward agentic patterns, replacing hardcoded workflows with LLM-driven planning',
+        'Live-traffic system replaying real requests from separate machines into running assessment tasks',
+        'Ephemeral LLM API keys on LiteLLM with spend caps and 2-hour validity so candidates run RAG and agent tasks with zero key setup',
       ],
     },
     {
